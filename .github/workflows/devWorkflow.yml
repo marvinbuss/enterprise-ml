@@ -1,0 +1,53 @@
+name: Dev Deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/**"
+      - "code/MyDotNetCoreSqlProject/**"
+      - "code/MyDotNetSqlProject/**"
+      - "code/Scripts/**"
+      - "code/synapseParameters/**"
+      - "infra/**"
+      - "data-auto-dev-synapse001/**"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/**"
+      - "code/MyDotNetCoreSqlProject/**"
+      - "code/MyDotNetSqlProject/**"
+      - "code/Scripts/**"
+      - "code/synapseParameters/**"
+      - "infra/**"
+
+jobs:
+  infra_validation_dev:
+    uses: ./.github/workflows/infraValidationTemplate.yml
+    name: "Validation of IaC templates - Dev"
+    with:
+      environment: "dev"
+    secrets:
+      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+      azure_location_name: ${{ secrets.AZURE_LOCATION }}
+      tenant_id: ${{ secrets.TENANT_ID }}
+      client_id: ${{ secrets.CLIENT_ID }}
+      client_secret: ${{ secrets.CLIENT_SECRET }}
+
+  infra_deployment_dev:
+    uses: ./.github/workflows/infraDeploymentTemplate.yml
+    name: "Deployment of IaC templates - Dev"
+    needs: [infra_validation_dev]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    with:
+      environment: "dev"
+    secrets:
+      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+      azure_location_name: ${{ secrets.AZURE_LOCATION }}
+      tenant_id: ${{ secrets.TENANT_ID }}
+      client_id: ${{ secrets.CLIENT_ID }}
+      client_secret: ${{ secrets.CLIENT_SECRET }}
