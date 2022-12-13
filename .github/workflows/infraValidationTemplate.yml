@@ -1,0 +1,89 @@
+name: Infra Validation Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+    secrets:
+      azure_subscription_id:
+        required: true
+        description: "Specifies the subscription id of the deployment."
+      azure_resource_group_name:
+        required: true
+        description: "Specifies the name of the resource group for the deployment."
+      azure_location_name:
+        required: true
+        description: "Specifies the location name of the deployment."
+      tenant_id:
+        required: true
+        description: "Specifies the tenant id of the deployment."
+      client_id:
+        required: true
+        description: "Specifies the client id."
+      client_secret:
+        required: true
+        description: "Specifies the client secret."
+
+jobs:
+  validation:
+    name: Validation of ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v2
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          creds:  '{"clientId":"${{ secrets.client_id }}","clientSecret":"${{ secrets.client_secret }}","subscriptionId":"${{ secrets.azure_subscription_id }}","tenantId":"${{ secrets.tenant_id }}"}'
+
+      # Deploy Template - validation
+      - name: Deploy Template - validation
+        id: deployment_validation
+        uses: azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.azure_subscription_id }}
+          resourceGroupName: ${{ secrets.azure_resource_group_name }}
+          region: ${{ secrets.azure_location_name }}
+          template: ${{ github.workspace }}/infra/main.bicep
+          parameters: ${{ github.workspace }}/infra/params.${{ inputs.environment }}.json
+          deploymentMode: Validate
+          deploymentName: "App-${{ github.sha }}"
+          failOnStdErr: false
+
+      # Deploy Template - what-if
+      - name: Deploy Template - what-if
+        id: deployment_whatif
+        uses: azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.azure_subscription_id }}
+          resourceGroupName: ${{ secrets.azure_resource_group_name }}
+          region: ${{ secrets.azure_location_name }}
+          template: ${{ github.workspace }}/infra/main.bicep
+          parameters: ${{ github.workspace }}/infra/params.${{ inputs.environment }}.json
+          deploymentMode: Incremental
+          deploymentName: "App-${{ github.sha }}"
+          failOnStdErr: false
+          additionalArguments: "--what-if --what-if-exclude-change-types Ignore NoChange Unsupported --what-if-result-format FullResourcePayloads"
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout
