@@ -272,22 +272,14 @@ resource machineLearningDatastores 'Microsoft.MachineLearningServices/workspaces
   properties: {
     datastoreType: 'AzureDataLakeGen2'
     tags: tags
-    
-    contents: {
-      contentsType: 'AzureDataLakeGen2'
-      accountName: split(datalakeFileSystemId, '/')[8]
-      containerName: last(split(datalakeFileSystemId, '/'))
-      credentials: {
-        credentialsType: 'None'
-        secrets: {
-          secretsType: 'None'
-        }
-      }
-      endpoint: environment().suffixes.storage
-      protocol: 'https'
+    accountName: split(datalakeFileSystemId, '/')[8]
+    filesystem: last(split(datalakeFileSystemId, '/'))
+    endpoint: environment().suffixes.storage
+    protocol: 'https'
+    serviceDataAccessAuthIdentity: 'WorkspaceSystemAssignedIdentity'
+    credentials: {
+      credentialsType: 'None'
     }
-    description: 'Data Lake Gen2 - ${split(datalakeFileSystemId, '/')[8]}'
-    isDefault: false
   }
 }]
 
