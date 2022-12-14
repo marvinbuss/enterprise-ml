@@ -29,9 +29,15 @@
             "value": ""
         },
         "machineLearningComputeInstance001AdministratorObjectId": {
-            "value": ""
+            "value": "5515fcb5-5829-44c8-99a0-f787768e8867"
         },
         "machineLearningComputeInstance001AdministratorPublicSshKey": {
+            "value": ""
+        },
+        "machineLearningComputeInstance002AdministratorObjectId": {
+            "value": "abd37d6f-f2bd-40d7-b19e-87d456268400"
+        },
+        "machineLearningComputeInstance002AdministratorPublicSshKey": {
             "value": ""
         },
         "administratorObjectId": {

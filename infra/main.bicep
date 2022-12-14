@@ -38,6 +38,11 @@ param machineLearningComputeInstance001AdministratorObjectId string = ''
 @secure()
 @description('Specifies the public ssh key for compute instance 001 in the Machine Learning Workspace. This parameter is optional and allows the user to connect via Visual Studio Code to the Compute Instance.')
 param machineLearningComputeInstance001AdministratorPublicSshKey string = ''
+@description('Specifies the object ID of the user who gets assigned to compute instance 002 in the Machine Learning Workspace. If you do not want to create a Compute Instance, leave this value empty as is.')
+param machineLearningComputeInstance002AdministratorObjectId string = ''
+@secure()
+@description('Specifies the public ssh key for compute instance 002 in the Machine Learning Workspace. This parameter is optional and allows the user to connect via Visual Studio Code to the Compute Instance.')
+param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
 @secure()
 @description('Specifies the administrator object ID of the Synapse Workspace. If you selected dataFactory as processingService, leave this value empty as is.')
 param administratorObjectId string = ''
@@ -300,6 +305,8 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
     synapseBigDataPoolId: processingService == 'synapse' ? synapse001.outputs.synapseBigDataPool001Id : ''
     machineLearningComputeInstance001AdministratorObjectId: machineLearningComputeInstance001AdministratorObjectId
     machineLearningComputeInstance001AdministratorPublicSshKey: machineLearningComputeInstance001AdministratorPublicSshKey
+    machineLearningComputeInstance002AdministratorObjectId: machineLearningComputeInstance002AdministratorObjectId
+    machineLearningComputeInstance002AdministratorPublicSshKey: machineLearningComputeInstance002AdministratorPublicSshKey
     privateDnsZoneIdMachineLearningApi: privateDnsZoneIdMachineLearningApi
     privateDnsZoneIdMachineLearningNotebooks: privateDnsZoneIdMachineLearningNotebooks
     enableRoleAssignments: enableRoleAssignments

@@ -24,6 +24,9 @@ param databricksAccessToken string = ''
 param machineLearningComputeInstance001AdministratorObjectId string = ''
 @secure()
 param machineLearningComputeInstance001AdministratorPublicSshKey string = ''
+param machineLearningComputeInstance002AdministratorObjectId string = ''
+@secure()
+param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
 param privateDnsZoneIdMachineLearningApi string = ''
 param privateDnsZoneIdMachineLearningNotebooks string = ''
 param enableRoleAssignments bool = false
@@ -257,6 +260,54 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
       sshSettings: {
         adminPublicKey: machineLearningComputeInstance001AdministratorPublicSshKey
         sshPublicAccess: empty(machineLearningComputeInstance001AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
+      }
+      subnet: {
+        id: subnetId
+      }
+      vmSize: 'Standard_DS3_v2'
+    }
+  }
+}
+
+resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(machineLearningComputeInstance001AdministratorObjectId)) {
+  parent: machineLearning
+  name: 'computeinstance002'
+  dependsOn: [
+    machineLearningPrivateEndpoint
+    machineLearningPrivateEndpointARecord
+  ]
+  location: location
+  tags: tags
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    computeType: 'ComputeInstance'
+    computeLocation: location
+    description: 'Machine Learning compute instance 002'
+    disableLocalAuth: true
+    properties: {
+      applicationSharingPolicy: 'Personal'
+      computeInstanceAuthorizationType: 'personal'
+      #disable-next-line BCP037
+      enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
+      #disable-next-line BCP037
+      isolatedNetwork: false
+      personalComputeInstanceSettings: {
+        assignedUser: {
+          objectId: machineLearningComputeInstance002AdministratorObjectId
+          tenantId: subscription().tenantId
+        }
+      }
+      setupScripts: {
+        scripts: {
+          creationScript: {}
+          startupScript: {}
+        }
+      }
+      sshSettings: {
+        adminPublicKey: machineLearningComputeInstance002AdministratorPublicSshKey
+        sshPublicAccess: empty(machineLearningComputeInstance002AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
       }
       subnet: {
         id: subnetId
