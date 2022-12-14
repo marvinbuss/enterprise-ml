@@ -25,8 +25,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     DisableLocalAuth: false
     Flow_Type: 'Bluefield'
     ForceCustomerStorageForProfiler: false
-    ImmediatePurgeDataOn30Days: true
-    IngestionMode: 'ApplicationInsights'
+    IngestionMode: 'LogAnalytics'
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Disabled'
     Request_Source: 'rest'

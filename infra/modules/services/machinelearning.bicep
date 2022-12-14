@@ -24,6 +24,9 @@ param databricksAccessToken string = ''
 param machineLearningComputeInstance001AdministratorObjectId string = ''
 @secure()
 param machineLearningComputeInstance001AdministratorPublicSshKey string = ''
+param machineLearningComputeInstance002AdministratorObjectId string = ''
+@secure()
+param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
 param privateDnsZoneIdMachineLearningApi string = ''
 param privateDnsZoneIdMachineLearningNotebooks string = ''
 param enableRoleAssignments bool = false
@@ -248,15 +251,63 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
           tenantId: subscription().tenantId
         }
       }
-      setupScripts: {
-        scripts: {
-          creationScript: {}
-          startupScript: {}
-        }
-      }
+      // setupScripts: {
+      //   scripts: {
+      //     creationScript: {}
+      //     startupScript: {}
+      //   }
+      // }
       sshSettings: {
         adminPublicKey: machineLearningComputeInstance001AdministratorPublicSshKey
         sshPublicAccess: empty(machineLearningComputeInstance001AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
+      }
+      subnet: {
+        id: subnetId
+      }
+      vmSize: 'Standard_DS3_v2'
+    }
+  }
+}
+
+resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(machineLearningComputeInstance001AdministratorObjectId)) {
+  parent: machineLearning
+  name: 'computeinstance002'
+  dependsOn: [
+    machineLearningPrivateEndpoint
+    machineLearningPrivateEndpointARecord
+  ]
+  location: location
+  tags: tags
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    computeType: 'ComputeInstance'
+    computeLocation: location
+    description: 'Machine Learning compute instance 002'
+    disableLocalAuth: true
+    properties: {
+      applicationSharingPolicy: 'Personal'
+      computeInstanceAuthorizationType: 'personal'
+      #disable-next-line BCP037
+      enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
+      #disable-next-line BCP037
+      isolatedNetwork: false
+      personalComputeInstanceSettings: {
+        assignedUser: {
+          objectId: machineLearningComputeInstance002AdministratorObjectId
+          tenantId: subscription().tenantId
+        }
+      }
+      // setupScripts: {
+      //   scripts: {
+      //     creationScript: {}
+      //     startupScript: {}
+      //   }
+      // }
+      sshSettings: {
+        adminPublicKey: machineLearningComputeInstance002AdministratorPublicSshKey
+        sshPublicAccess: empty(machineLearningComputeInstance002AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
       }
       subnet: {
         id: subnetId
@@ -272,22 +323,14 @@ resource machineLearningDatastores 'Microsoft.MachineLearningServices/workspaces
   properties: {
     datastoreType: 'AzureDataLakeGen2'
     tags: tags
-    
-    contents: {
-      contentsType: 'AzureDataLakeGen2'
-      accountName: split(datalakeFileSystemId, '/')[8]
-      containerName: last(split(datalakeFileSystemId, '/'))
-      credentials: {
-        credentialsType: 'None'
-        secrets: {
-          secretsType: 'None'
-        }
-      }
-      endpoint: environment().suffixes.storage
-      protocol: 'https'
+    accountName: split(datalakeFileSystemId, '/')[8]
+    filesystem: last(split(datalakeFileSystemId, '/'))
+    endpoint: environment().suffixes.storage
+    protocol: 'https'
+    serviceDataAccessAuthIdentity: 'WorkspaceSystemAssignedIdentity'
+    credentials: {
+      credentialsType: 'None'
     }
-    description: 'Data Lake Gen2 - ${split(datalakeFileSystemId, '/')[8]}'
-    isDefault: false
   }
 }]
 

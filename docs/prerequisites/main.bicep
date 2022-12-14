@@ -97,6 +97,28 @@ module governanceResources 'modules/governance.bicep' = {
   }
 }
 
+// Storage resources
+resource storageResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: '${name}-storage'
+  location: location
+  tags: tagsJoined
+  properties: {}
+}
+
+module storageResources 'modules/storage.bicep' = {
+  name: 'storageResources'
+  scope: storageResourceGroup
+  params: {
+    location: location
+    prefix: name
+    tags: tagsJoined
+    subnetId: networkServices.outputs.servicesSubnetId
+    purviewId: governanceResources.outputs.purviewId
+    privateDnsZoneIdBlob: globalDnsZones.outputs.privateDnsZoneIdBlob
+    privateDnsZoneIdDfs: globalDnsZones.outputs.privateDnsZoneIdDfs
+  }
+}
+
 // Outputs
 output location string = location
 output environment string = environment

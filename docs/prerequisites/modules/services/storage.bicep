@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-// This template is used to create a Storage account.
+// This template is used to create a datalake.
 targetScope = 'resourceGroup'
 
 // Parameters
@@ -9,27 +9,60 @@ param location string
 param tags object
 param subnetId string
 param storageName string
-@allowed([
-  'Standard_LRS'
-  'Standard_ZRS'
-  'Standard_GRS'
-  'Standard_GZRS'
-  'Standard_RAGRS'
-  'Standard_RAGZRS'
-  'Premium_LRS'
-  'Premium_ZRS'
-])
-param storageSkuName string = 'Standard_LRS'
-param storageContainerNames array = [
-  'default'
-]
+param privateDnsZoneIdDfs string = ''
 param privateDnsZoneIdBlob string = ''
-param privateDnsZoneIdFile string = ''
+param fileSystemNames array
+param purviewId string = ''
+param dataLandingZoneSubscriptionIds array = []
 
 // Variables
 var storageNameCleaned = replace(storageName, '-', '')
 var storagePrivateEndpointNameBlob = '${storage.name}-blob-pe'
-var storagePrivateEndpointNameFile = '${storage.name}-file-pe'
+var storagePrivateEndpointNameDfs = '${storage.name}-dfs-pe'
+var synapseResourceAccessrules = [for subscriptionId in union(dataLandingZoneSubscriptionIds, array(subscription().subscriptionId)): {
+  tenantId: subscription().tenantId
+  resourceId: '/subscriptions/${subscriptionId}/resourceGroups/*/providers/Microsoft.Synapse/workspaces/*'
+}]
+var purviewResourceAccessRules = {
+  tenantId: subscription().tenantId
+  resourceId: purviewId
+}
+var resourceAccessRules = empty(purviewId) ? synapseResourceAccessrules : union(synapseResourceAccessrules, array(purviewResourceAccessRules))
+var storageZrsRegions = [
+  // Africa
+  'southafricanorth'
+
+  // Asia
+  'australiaeast'
+  'centralindia'
+  'eastasia'
+  'japaneast'
+  'koreacentral'
+  'southeastasia'
+
+  // Canada
+  'canadacentral'
+
+  // Europe
+  'francecentral'
+  'germanywestcentral'
+  'northeurope'
+  'norwayeast'
+  'swedencentral'
+  'uksouth'
+  'westeurope'
+
+  // South America
+  'brazilsouth'
+
+  // US
+  'centralus'
+  'eastus'
+  'eastus2'
+  'southcentralus'
+  'westus2'
+  'westus3'
+]
 
 // Resources
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -40,15 +73,15 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     type: 'SystemAssigned'
   }
   sku: {
-    name: storageSkuName
+    name: contains(storageZrsRegions, location) ? 'Standard_ZRS' : 'Standard_LRS'
   }
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
     allowBlobPublicAccess: false
-    allowedCopyScope: 'AAD'
     allowCrossTenantReplication: false
-    allowSharedKeyAccess: true
+    allowedCopyScope: 'AAD'
+    allowSharedKeyAccess: false
     defaultToOAuthAuthentication: true
     dnsEndpointType: 'Standard'
     encryption: {
@@ -81,7 +114,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     //     immutabilityPeriodSinceCreationInDays: 7
     //   }
     // }
-    isHnsEnabled: false
+    isHnsEnabled: true
     isLocalUserEnabled: false
     isNfsV3Enabled: false
     isSftpEnabled: false
@@ -95,13 +128,13 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
       defaultAction: 'Deny'
       ipRules: []
       virtualNetworkRules: []
+      resourceAccessRules: resourceAccessRules
     }
-    publicNetworkAccess: 'Enabled'
-    routingPreference: {
-      routingChoice: 'MicrosoftRouting'
-      publishInternetEndpoints: false
-      publishMicrosoftEndpoints: false
-    }
+    // routingPreference: {  // Not supported for thsi account
+    //   routingChoice: 'MicrosoftRouting'
+    //   publishInternetEndpoints: false
+    //   publishMicrosoftEndpoints: false
+    // }
     supportsHttpsTrafficOnly: true
     // sasPolicy: {
     //   expirationAction: 'Log'
@@ -123,17 +156,17 @@ resource storageManagementPolicies 'Microsoft.Storage/storageAccounts/management
           definition: {
             actions: {
               baseBlob: {
-                // enableAutoTierToHotFromCool: true  // Not available for this configuration
+                // enableAutoTierToHotFromCool: true  // Not available for HNS storage yet
                 tierToCool: {
                   // daysAfterLastAccessTimeGreaterThan: 90  // Not available for HNS storage yet
                   daysAfterModificationGreaterThan: 90
                 }
-                // tierToArchive: {  // Uncomment, if you want to move data to the archive tier
-                //   // daysAfterLastAccessTimeGreaterThan: 365
+                // tierToArchive: {  // Not available for HNS storage yet
+                //   // daysAfterLastAccessTimeGreaterThan: 365  // Not available for HNS storage yet
                 //   daysAfterModificationGreaterThan: 365
                 // }
                 // delete: {  // Uncomment, if you also want to delete assets after a certain timeframe
-                //   // daysAfterLastAccessTimeGreaterThan: 730
+                //   // daysAfterLastAccessTimeGreaterThan: 730  // Not available for HNS storage yet
                 //   daysAfterModificationGreaterThan: 730
                 // }
               }
@@ -152,7 +185,7 @@ resource storageManagementPolicies 'Microsoft.Storage/storageAccounts/management
                 tierToCool: {
                   daysAfterCreationGreaterThan: 90
                 }
-                // tierToArchive: {  // Uncomment, if you want to move data to the archive tier
+                // tierToArchive: {  // Not available for HNS storage yet
                 //   daysAfterCreationGreaterThan: 365
                 // }
                 // delete: {  // Uncomment, if you also want to delete assets after a certain timeframe
@@ -184,7 +217,7 @@ resource storageBlobServices 'Microsoft.Storage/storageAccounts/blobServices@202
     cors: {
       corsRules: []
     }
-    // automaticSnapshotPolicyEnabled: true  // Uncomment, if you want to enable addition features on the storage account
+    // automaticSnapshotPolicyEnabled: true  // Not available for HNS storage yet
     // changeFeed: {
     //   enabled: true
     //   retentionInDays: 7
@@ -210,9 +243,9 @@ resource storageBlobServices 'Microsoft.Storage/storageAccounts/blobServices@202
   }
 }
 
-resource storageContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = [for storageContainerName in storageContainerNames: {
+resource storageFileSystems 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = [for fileSystemName in fileSystemNames: {
   parent: storageBlobServices
-  name: storageContainerName
+  name: fileSystemName
   properties: {
     publicAccess: 'None'
     metadata: {}
@@ -261,21 +294,21 @@ resource storagePrivateEndpointBlobARecord 'Microsoft.Network/privateEndpoints/p
   }
 }
 
-resource storagePrivateEndpointFile 'Microsoft.Network/privateEndpoints@2022-07-01' = {
-  name: storagePrivateEndpointNameFile
+resource storagePrivateEndpointDfs 'Microsoft.Network/privateEndpoints@2022-07-01' = {
+  name: storagePrivateEndpointNameDfs
   location: location
   tags: tags
   properties: {
     applicationSecurityGroups: []
     customDnsConfigs: []
-    customNetworkInterfaceName: '${storagePrivateEndpointNameFile}-nic'
+    customNetworkInterfaceName: '${storagePrivateEndpointNameDfs}-nic'
     manualPrivateLinkServiceConnections: []
     privateLinkServiceConnections: [
       {
-        name: storagePrivateEndpointNameFile
+        name: storagePrivateEndpointNameDfs
         properties: {
           groupIds: [
-            'file'
+            'dfs'
           ]
           privateLinkServiceId: storage.id
           requestMessage: ''
@@ -288,15 +321,15 @@ resource storagePrivateEndpointFile 'Microsoft.Network/privateEndpoints@2022-07-
   }
 }
 
-resource storagePrivateEndpointFileARecord 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-07-01' = if (!empty(privateDnsZoneIdFile)) {
-  parent: storagePrivateEndpointFile
+resource storagePrivateEndpointDfsARecord 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-07-01' = if (!empty(privateDnsZoneIdDfs)) {
+  parent: storagePrivateEndpointDfs
   name: 'default'
   properties: {
     privateDnsZoneConfigs: [
       {
-        name: '${storagePrivateEndpointFile.name}-arecord'
+        name: '${storagePrivateEndpointDfs.name}-arecord'
         properties: {
-          privateDnsZoneId: privateDnsZoneIdFile
+          privateDnsZoneId: privateDnsZoneIdDfs
         }
       }
     ]
@@ -305,3 +338,6 @@ resource storagePrivateEndpointFileARecord 'Microsoft.Network/privateEndpoints/p
 
 // Outputs
 output storageId string = storage.id
+output storageFileSystemIds array = [for fileSystemName in fileSystemNames: {
+  storageFileSystemId: resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', storageNameCleaned, 'default', fileSystemName)
+}]
