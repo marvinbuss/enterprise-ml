@@ -17,6 +17,7 @@ param privateDnsZoneIdEventhubNamespace string = ''
 
 // Variables
 var purview001Name = '${prefix}-purview001'
+var machineLearningRegistry001Name = '${prefix}-mlreg001'
 
 // Resources
 module purview001 'services/purview.bicep' = {
@@ -32,6 +33,15 @@ module purview001 'services/purview.bicep' = {
     privateDnsZoneIdStorageBlob: privateDnsZoneIdStorageBlob
     privateDnsZoneIdStorageQueue: privateDnsZoneIdStorageQueue
     privateDnsZoneIdEventhubNamespace: privateDnsZoneIdEventhubNamespace
+  }
+}
+
+module machineLearningRegistry001 'services/machinelearningregistry.bicep' = {
+  name: 'machineLearningRegistry001'
+  params: {
+    location: location
+    tags: tags
+    machineLearningRegistryName: machineLearningRegistry001Name
   }
 }
 
