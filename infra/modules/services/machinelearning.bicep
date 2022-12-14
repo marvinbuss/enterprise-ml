@@ -251,12 +251,12 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
           tenantId: subscription().tenantId
         }
       }
-      setupScripts: {
-        scripts: {
-          creationScript: {}
-          startupScript: {}
-        }
-      }
+      // setupScripts: {
+      //   scripts: {
+      //     creationScript: {}
+      //     startupScript: {}
+      //   }
+      // }
       sshSettings: {
         adminPublicKey: machineLearningComputeInstance001AdministratorPublicSshKey
         sshPublicAccess: empty(machineLearningComputeInstance001AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
@@ -299,12 +299,12 @@ resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/wo
           tenantId: subscription().tenantId
         }
       }
-      setupScripts: {
-        scripts: {
-          creationScript: {}
-          startupScript: {}
-        }
-      }
+      // setupScripts: {
+      //   scripts: {
+      //     creationScript: {}
+      //     startupScript: {}
+      //   }
+      // }
       sshSettings: {
         adminPublicKey: machineLearningComputeInstance002AdministratorPublicSshKey
         sshPublicAccess: empty(machineLearningComputeInstance002AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
