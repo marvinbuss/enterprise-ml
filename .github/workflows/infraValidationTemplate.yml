@@ -48,9 +48,6 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.client_id }}","clientSecret":"${{ secrets.client_secret }}","subscriptionId":"${{ secrets.azure_subscription_id }}","tenantId":"${{ secrets.tenant_id }}"}'
 
-      - run: |
-          az account show
-
       # Deploy Template - validation
       - name: Deploy Template - validation
         id: deployment_validation
