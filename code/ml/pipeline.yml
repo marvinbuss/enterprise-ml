@@ -9,15 +9,15 @@ settings:
 jobs:
   preprocess:
     type: command
-    component: ./preprocess/preprocess.yml
+    component: ./preprocess/component.yml
     compute: azureml:cpu-cluster
 
   train:
     type: command
-    component: ./train/train.yml
+    component: ./train/component.yml
     compute: azureml:cpu-cluster
 
   validate:
     type: command
-    component: ./validate/validate.yml
+    component: ./validate/component.yml
     compute: azureml:cpu-cluster
