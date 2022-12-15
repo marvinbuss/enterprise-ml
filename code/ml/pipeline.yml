@@ -8,12 +8,12 @@ jobs:
     type: command
     component: ./preprocess/preprocess.yml
     compute: azureml:cpu-cluster
-  
+
   train:
     type: command
     component: ./train/train.yml
     compute: azureml:cpu-cluster
-  
+
   validate:
     type: command
     component: ./validate/validate.yml
