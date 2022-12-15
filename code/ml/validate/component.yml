@@ -1,0 +1,25 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+name: validate
+display_name: Validate
+version: 1
+
+code: .
+inputs:
+  tracking_uri:
+    type: string
+  experiment_name:
+    type: string
+  input_data:
+    type: uri_folder
+    mode: ro_mount
+outputs:
+  output_data:
+    type: uri_folder
+environment:
+  conda_file: ./conda.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
+command: >-
+  python main.py
+  --tracking-uri ${{inputs.tracking_uri}}
+  --experiment-name ${{inputs.experiment_name}}
