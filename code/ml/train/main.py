@@ -1,5 +1,6 @@
-import os
 import argparse
+import os
+
 import mlflow
 
 
@@ -32,8 +33,15 @@ def parse_args() -> argparse.Namespace:
     RETURNS (argparse.Namespace): Arguments parsed from command line.
     """
     parser = argparse.ArgumentParser(description="Arguments for pipeline step")
-    parser.add_argument("--tracking-uri", dest="tracking_uri", type=str, help="MLFlow Tracking URL")
-    parser.add_argument("--experiment-name", dest="experiment_name", type=str, help="MLFlow experiment name")
+    parser.add_argument(
+        "--tracking-uri", dest="tracking_uri", type=str, help="MLFlow Tracking URL"
+    )
+    parser.add_argument(
+        "--experiment-name",
+        dest="experiment_name",
+        type=str,
+        help="MLFlow experiment name",
+    )
     args = parser.parse_args()
     return args
 
