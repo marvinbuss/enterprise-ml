@@ -42,6 +42,15 @@ def parse_args() -> argparse.Namespace:
         type=str,
         help="MLFlow experiment name",
     )
+    parser.add_argument(
+        "--input-data", dest="input_data", type=str, help="Path to input dataset."
+    )
+    parser.add_argument(
+        "--output-data",
+        dest="output_data",
+        type=str,
+        help="Path to where output should be stored.",
+    )
     args = parser.parse_args()
     return args
 
