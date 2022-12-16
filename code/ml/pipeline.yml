@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+display_name: Training Pipeline
+description: Pipeline job with component using environment defined by a conda file
+
+settings:
+  default_compute: azureml:cpu-cluster
+
+jobs:
+  preprocess:
+    type: command
+    component: ./preprocess/component.yml
+    compute: azureml:cpu-cluster
+
+  train:
+    type: command
+    component: ./train/component.yml
+    compute: azureml:cpu-cluster
+
+  validate:
+    type: command
+    component: ./validate/component.yml
+    compute: azureml:cpu-cluster

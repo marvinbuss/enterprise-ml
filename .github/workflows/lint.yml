@@ -36,4 +36,5 @@ jobs:
           VALIDATE_BASH: false
           VALIDATE_SQLFLUFF: false
           VALIDATE_GITHUB_ACTIONS: false
+          VALIDATE_PYTHON_FLAKE8: false
           FILTER_REGEX_EXCLUDE: (/.devcontainer/|/reference/)
