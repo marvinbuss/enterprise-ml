@@ -2,6 +2,8 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: score
 display_name: Score
+description: Scoring step of the ml pipeline.
+is_deterministic: true
 version: 1
 
 code: .

@@ -2,6 +2,8 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: validate
 display_name: Validate
+description: Validation step of the ml pipeline.
+is_deterministic: true
 version: 1
 
 code: .

@@ -2,6 +2,8 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: preprocess
 display_name: Pre-Process
+description: Pre-processing step of the ml pipeline.
+is_deterministic: true
 version: 1
 
 code: .

@@ -2,6 +2,8 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: train
 display_name: Train
+description: Training step of the ml pipeline.
+is_deterministic: false
 version: 1
 
 code: .
