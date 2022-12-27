@@ -2,6 +2,7 @@ import argparse
 import os
 
 import mlflow
+import mltable
 
 
 def main(args: argparse.Namespace) -> None:
@@ -10,6 +11,9 @@ def main(args: argparse.Namespace) -> None:
     args (argparse.Namespace): The model that should be used for analyzing the text.
     RETURNS (None): Nothing gets returned.
     """
+    tbl = mltable.load(args.input_data)
+    df = tbl.to_pandas_dataframe()
+
     with mlflow.start_run() as mlflow_run:
         mlflow.log_param("hello", "world")
 
