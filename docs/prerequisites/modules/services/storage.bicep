@@ -27,7 +27,11 @@ var purviewResourceAccessRules = {
   tenantId: subscription().tenantId
   resourceId: purviewId
 }
-var resourceAccessRules = empty(purviewId) ? synapseResourceAccessrules : union(synapseResourceAccessrules, array(purviewResourceAccessRules))
+var machineLearningResourceAccessRules = [for subscriptionId in union(dataLandingZoneSubscriptionIds, array(subscription().subscriptionId)): {
+  tenantId: subscription().tenantId
+  resourceId: '/subscriptions/${subscriptionId}/resourceGroups/*/providers/Microsoft.MachineLearningServices/workspaces/*'
+}]
+var resourceAccessRules = empty(purviewId) ? union(synapseResourceAccessrules, machineLearningResourceAccessRules) : union(synapseResourceAccessrules, machineLearningResourceAccessRules, array(purviewResourceAccessRules))
 var storageZrsRegions = [
   // Africa
   'southafricanorth'
