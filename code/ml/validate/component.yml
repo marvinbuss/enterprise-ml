@@ -3,10 +3,12 @@ type: command
 name: validate
 display_name: Validate
 description: Validation step of the ml pipeline.
-is_deterministic: true
 version: 1
+resources:
+    instance_count: 1
 
 code: .
+is_deterministic: true
 inputs:
   tracking_uri:
     description: Specifies the tracking url for mlflow.

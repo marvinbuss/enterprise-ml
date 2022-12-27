@@ -3,10 +3,12 @@ type: command
 name: train
 display_name: Train
 description: Training step of the ml pipeline.
-is_deterministic: false
 version: 1
+resources:
+    instance_count: 1
 
 code: .
+is_deterministic: false
 inputs:
   tracking_uri:
     description: Specifies the tracking url for mlflow.
