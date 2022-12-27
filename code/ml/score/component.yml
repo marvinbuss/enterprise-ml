@@ -7,15 +7,23 @@ version: 1
 code: .
 inputs:
   tracking_uri:
+    description: Specifies the tracking url for mlflow.
     type: string
+    optional: false
   experiment_name:
+    description: Specifies the name of teh experiment.
     type: string
+    optional: false
   input_data:
-    type: uri_folder
+    description: Specifies the input dataset.
+    type: mltable
     mode: ro_mount
+    optional: false
 outputs:
   output_data:
-    type: uri_folder
+    description: Specifies the output dataset.
+    type: mltable
+    mode: rw_mount
 environment:
   conda_file: ./conda.yml
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
