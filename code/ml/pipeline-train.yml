@@ -1,11 +1,16 @@
 $schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 type: pipeline
+name: training_pipeline
 display_name: Training Pipeline
-description: Pipeline job with component using environment defined by a conda file
+description: Training pipeline job with components using environment defined by a conda file.
 
 settings:
+  default_datastore: azureml:entmldevlake001data
   default_compute: azureml:cpu-cluster
+  continue_on_step_failure: false
+  force_rerun: false
 
+experiment_name: training
 jobs:
   preprocess:
     type: command
