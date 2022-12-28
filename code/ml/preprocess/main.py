@@ -1,8 +1,14 @@
 import argparse
 import os
+import pickle
 
 import mlflow
 import mltable
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+RANDOM_STATE = 0
 
 
 def main(args: argparse.Namespace) -> None:
@@ -11,11 +17,43 @@ def main(args: argparse.Namespace) -> None:
     args (argparse.Namespace): The model that should be used for analyzing the text.
     RETURNS (None): Nothing gets returned.
     """
+    # Load data
     tbl = mltable.load(args.input_data)
     df = tbl.to_pandas_dataframe()
 
     with mlflow.start_run() as mlflow_run:
-        mlflow.log_param("hello", "world")
+        # Train, test split
+        train, test = train_test_split(
+            df, test_size=args.test_size, random_state=RANDOM_STATE, shuffle=True
+        )
+        mlflow.log_param("test_size", args.test_size)
+
+        # Normalize data
+        scaler = StandardScaler(copy=True, with_mean=True, with_std=True)
+        scaler_model = scaler.fit(train)
+        train_norm_df = pd.DataFrame(
+            data=scaler_model.transform(train), columns=df.columns
+        )
+        test_norm_df = pd.DataFrame(
+            data=scaler_model.transform(test), columns=df.columns
+        )
+
+        # Log parameters and metrics
+        mean = {
+            f"{scaler_model.feature_names_in_[i]}_mean": scaler_model.mean_[i]
+            for i in range(len(scaler_model.feature_names_in_))
+        }
+        scale = {
+            f"{scaler_model.feature_names_in_[i]}_std": scaler_model.scale_[i]
+            for i in range(len(scaler_model.feature_names_in_))
+        }
+        mlflow.log_param("test_size", args.test_size)
+        mlflow.log_metrics(metrics=mean)
+        mlflow.log_metrics(metrics=scale)
+        mlflow.sklearn.log_model(scaler_model, "StandardScaler")
+
+        # Save data
+        # TODO
 
 
 def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
@@ -54,6 +92,13 @@ def parse_args() -> argparse.Namespace:
         dest="output_data",
         type=str,
         help="Path to where output should be stored.",
+    )
+    parser.add_argument(
+        "--test-size",
+        dest="test_size",
+        type=float,
+        help="Size of the test dataset in percent.",
+        default=0.2,
     )
     args = parser.parse_args()
     return args
