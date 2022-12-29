@@ -19,6 +19,16 @@ inputs:
     description: Specifies the name of teh experiment.
     type: string
     optional: false
+  svr_kernel:
+    description: Specifies the size of the test dataset in percent.
+    type: number
+    optional: true
+    default: 0.2
+  svr_degree:
+    description: Specifies the degree for the support vector regression.
+    type: number
+    optional: true
+    default: 0.2
   input_data:
     description: Specifies the input dataset.
     type: mltable
@@ -26,9 +36,8 @@ inputs:
     optional: false
 outputs:
   output_data:
-    description: Specifies the output dataset.
-    type: mltable
-    mode: rw_mount
+    description: Specifies the best model.
+    type: mlflow_model
 environment:
   conda_file: ./conda.yml
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
@@ -36,5 +45,7 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  --svr-kernel ${{inputs.svr_kernel}}
+  --svr-degree ${{inputs.svr_degree}}
   --input-data ${{inputs.input_data}}
   --output-data ${{outputs.output_data}}

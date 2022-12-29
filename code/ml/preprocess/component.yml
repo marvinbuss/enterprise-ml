@@ -19,23 +19,23 @@ inputs:
     description: Specifies the name of teh experiment.
     type: string
     optional: false
+  test_size:
+    description: Specifies the size of the test dataset in percent.
+    type: number
+    optional: true
+    default: 0.2
   input_data:
     description: Specifies the input dataset.
     type: mltable
     mode: ro_mount
     optional: false
-  validation_size:
-    description: Specifies the size of the validation dataset in percent.
-    type: number
-    optional: true
-    default: 0.2
 outputs:
   output_data_train:
     description: Specifies the output dataset for training.
     type: mltable
     mode: rw_mount
-  output_data_validation:
-    description: Specifies the output dataset for validation.
+  output_data_test:
+    description: Specifies the output dataset for test.
     type: mltable
     mode: rw_mount
 environment:
@@ -45,7 +45,7 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  --test-size ${{inputs.test_size}}
   --input-data ${{inputs.input_data}}
-  --validation-size ${{inputs.validation_size}}
   --output-data-train ${{outputs.output_data_train}}
-  --output-data-validation ${{outputs.output_data_validation}}
+  --output-data-test ${{outputs.output_data_test}}

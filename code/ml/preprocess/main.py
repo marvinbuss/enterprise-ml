@@ -41,9 +41,9 @@ def main(args: argparse.Namespace) -> None:
     df = tbl.to_pandas_dataframe()
 
     with mlflow.start_run() as mlflow_run:
-        # Train, validation split
-        train, validation = train_test_split(
-            df, test_size=args.validation_size, random_state=RANDOM_STATE, shuffle=True
+        # Train, test split
+        train, test = train_test_split(
+            df, test_size=args.test_size, random_state=RANDOM_STATE, shuffle=True
         )
 
         # Normalize data
@@ -52,8 +52,8 @@ def main(args: argparse.Namespace) -> None:
         train_norm_df = pd.DataFrame(
             data=scaler_model.transform(train), columns=df.columns
         )
-        validation_norm_df = pd.DataFrame(
-            data=scaler_model.transform(validation), columns=df.columns
+        test_norm_df = pd.DataFrame(
+            data=scaler_model.transform(test), columns=df.columns
         )
 
         # Log parameters and metrics
@@ -65,13 +65,13 @@ def main(args: argparse.Namespace) -> None:
             f"{scaler_model.feature_names_in_[i]}_std": scaler_model.scale_[i]
             for i in range(len(scaler_model.feature_names_in_))
         }
-        mlflow.log_param("validation_size", args.validation_size)
+        mlflow.log_param("test_size", args.test_size)
         mlflow.log_metrics(metrics=mean)
         mlflow.log_metrics(metrics=scale)
         mlflow.sklearn.log_model(scaler_model, "StandardScaler")
 
         # Save data
-        train_file_name = "train.parquet"
+        train_file_name = "diabetes.parquet"
         train_norm_df.to_parquet(
             path=os.path.join(args.output_data_train, train_file_name),
             engine="auto",
@@ -82,16 +82,16 @@ def main(args: argparse.Namespace) -> None:
         )
         create_mltable(path=args.output_data_train, file_name=train_file_name)
 
-        validation_file_name = "validation.parquet"
-        validation_norm_df.to_parquet(
-            path=os.path.join(args.output_data_validation, validation_file_name),
+        test_file_name = "diabetes.parquet"
+        test_norm_df.to_parquet(
+            path=os.path.join(args.output_data_test, test_file_name),
             engine="auto",
             compression="snappy",
             index=None,
             partition_cols=None,
             storage_options=None,
         )
-        create_mltable(path=args.output_data_validation, file_name=validation_file_name)
+        create_mltable(path=args.output_data_test, file_name=test_file_name)
 
 
 def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
@@ -123,14 +123,14 @@ def parse_args() -> argparse.Namespace:
         help="MLFlow experiment name",
     )
     parser.add_argument(
-        "--input-data", dest="input_data", type=str, help="Path to input dataset."
+        "--test-size",
+        dest="test_size",
+        type=float,
+        help="Size of the test dataset in percent.",
+        default=0.2,
     )
     parser.add_argument(
-        "--validation-size",
-        dest="validation_size",
-        type=float,
-        help="Size of the validation dataset in percent.",
-        default=0.2,
+        "--input-data", dest="input_data", type=str, help="Path to input dataset."
     )
     parser.add_argument(
         "--output-data-train",
@@ -139,10 +139,10 @@ def parse_args() -> argparse.Namespace:
         help="Path to where train data output should be stored.",
     )
     parser.add_argument(
-        "--output-data-validation",
-        dest="output_data_validation",
+        "--output-data-test",
+        dest="output_data_test",
         type=str,
-        help="Path to where validation data output should be stored.",
+        help="Path to where test data output should be stored.",
     )
     args = parser.parse_args()
     return args
