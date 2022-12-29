@@ -19,16 +19,16 @@ inputs:
     description: Specifies the name of teh experiment.
     type: string
     optional: false
-  input_data:
-    description: Specifies the input dataset.
-    type: mltable
-    mode: ro_mount
-    optional: false
   test_size:
     description: Specifies the size of the test dataset in percent.
     type: number
     optional: true
     default: 0.2
+  input_data:
+    description: Specifies the input dataset.
+    type: mltable
+    mode: ro_mount
+    optional: false
 outputs:
   output_data_train:
     description: Specifies the output dataset for training.
@@ -45,7 +45,7 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
-  --input-data ${{inputs.input_data}}
   --test-size ${{inputs.test_size}}
+  --input-data ${{inputs.input_data}}
   --output-data-train ${{outputs.output_data_train}}
   --output-data-test ${{outputs.output_data_test}}
