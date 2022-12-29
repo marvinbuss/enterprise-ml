@@ -1,0 +1,11 @@
+{
+	"name": "datalake001",
+	"properties": {
+		"description": "Data Lake containing datasets.",
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://entmldevlake001.dfs.core.windows.net/"
+		}
+	}
+}
