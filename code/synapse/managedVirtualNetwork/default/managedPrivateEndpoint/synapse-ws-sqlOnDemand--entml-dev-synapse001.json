@@ -1,0 +1,10 @@
+{
+	"name": "synapse-ws-sqlOnDemand--entml-dev-synapse001",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.Synapse/workspaces/entml-dev-synapse001",
+		"groupId": "sqlOnDemand",
+		"fqdns": [
+			"entml-dev-synapse001-ondemand.4c9f8f04-97cc-4230-949f-c03f01a05d85.sql.azuresynapse.net"
+		]
+	}
+}
