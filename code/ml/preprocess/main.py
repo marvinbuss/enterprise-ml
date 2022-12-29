@@ -123,14 +123,14 @@ def parse_args() -> argparse.Namespace:
         help="MLFlow experiment name",
     )
     parser.add_argument(
-        "--input-data", dest="input_data", type=str, help="Path to input dataset."
-    )
-    parser.add_argument(
         "--test-size",
         dest="test_size",
         type=float,
         help="Size of the test dataset in percent.",
         default=0.2,
+    )
+    parser.add_argument(
+        "--input-data", dest="input_data", type=str, help="Path to input dataset."
     )
     parser.add_argument(
         "--output-data-train",
