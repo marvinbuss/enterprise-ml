@@ -41,16 +41,6 @@ def main(args: argparse.Namespace) -> None:
         # Prepare data
         X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
 
-        # Train, validation split
-        # X_train, X_validation, y_train, y_validation = train_test_split(
-        #     X,
-        #     y,
-        #     test_size=args.validation_size,
-        #     random_state=RANDOM_STATE,
-        #     shuffle=True,
-        # )
-        # mlflow.log_param("validation_size", args.validation_size)
-
         # Create grid for grid search
         gamma = compute_value_range(20, -10, 4)
         C = compute_value_range(20, -4, 7)
@@ -130,13 +120,6 @@ def parse_args() -> argparse.Namespace:
         dest="experiment_name",
         type=str,
         help="MLFlow experiment name",
-    )
-    parser.add_argument(
-        "--validation-size",
-        dest="test_size",
-        type=float,
-        help="Size of the validation dataset in percent.",
-        default=0.2,
     )
     parser.add_argument(
         "--svr-kernel",
