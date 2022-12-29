@@ -31,6 +31,11 @@ def main(args: argparse.Namespace) -> None:
         r2s = r2_score(y_true=y, y_pred=y_pred)
         evs = explained_variance_score(y_true=y, y_pred=y_pred)
 
+        # Log parameters and metrics
+        mlflow.log_metric("mean_absolute_error", mae)
+        mlflow.log_metric("r2_score", r2s)
+        mlflow.log_metric("explained_variance_score", evs)
+
         # Get Run ID from model path
         run_id = ""
         with open(mlmodel_path, "r") as modelfile:
