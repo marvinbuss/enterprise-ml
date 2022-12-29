@@ -37,4 +37,4 @@ command: >-
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
   --input-data ${{inputs.input_data}}
-  --output-data ${{inputs.output_data}}
+  --output-data ${{outputs.output_data}}
