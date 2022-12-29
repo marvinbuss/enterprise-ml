@@ -1,0 +1,11 @@
+{
+	"name": "keyvault001",
+	"properties": {
+		"description": "Linked Service for keyvault001.",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://entml-dev-vault001.vault.azure.net/"
+		}
+	}
+}
