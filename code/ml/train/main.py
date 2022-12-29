@@ -82,6 +82,9 @@ def main(args: argparse.Namespace) -> None:
             y=y,
         )
 
+        # Save model
+        mlflow.sklearn.save_model(clf.best_estimator_, args.output_data)
+
         # Log parameters and metrics
         mlflow.log_param("kernel", args.svr_kernel)
         mlflow.log_param("degree", args.svr_degree)
