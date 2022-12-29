@@ -24,6 +24,11 @@ inputs:
     type: mltable
     mode: ro_mount
     optional: false
+  input_model:
+    description: Specifies the input model.
+    type: uri_folder
+    mode: ro_mount
+    optional: false
 outputs:
   output_data:
     description: Specifies the output dataset.
