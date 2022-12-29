@@ -6,4 +6,6 @@ dependencies:
   - pip
   - pip:
     - mlflow~=2.0.1
+    - mltable~=1.0.0
     - azureml-mlflow~=1.48.0
+    - azureml-dataprep[pandas]~=4.8.3

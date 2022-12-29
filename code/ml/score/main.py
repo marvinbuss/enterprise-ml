@@ -2,6 +2,29 @@ import argparse
 import os
 
 import mlflow
+import mltable
+
+RANDOM_STATE = 0
+
+
+def create_mltable(path: str, file_name: str) -> None:
+    """Creates an MLTable definition at the provided path.
+
+    path (str): The path where the MLTable file will be created.
+    file_name (str): The file name referenced in the MLTable file.
+    RETURNS (None): Nothing gets returned.
+    """
+    mltable_def = f"""
+    type: mltable
+    paths:
+    - file: ./{file_name}
+    transformations:
+    - read_parquet:
+        include_path_column: false
+    """
+
+    with open(os.path.join(path, "MLTable"), "w") as f:
+        f.write(mltable_def)
 
 
 def main(args: argparse.Namespace) -> None:
@@ -10,6 +33,9 @@ def main(args: argparse.Namespace) -> None:
     args (argparse.Namespace): The model that should be used for analyzing the text.
     RETURNS (None): Nothing gets returned.
     """
+    tbl = mltable.load(args.input_data)
+    df = tbl.to_pandas_dataframe()
+
     with mlflow.start_run() as mlflow_run:
         mlflow.log_param("hello", "world")
 

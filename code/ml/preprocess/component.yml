@@ -2,20 +2,42 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: preprocess
 display_name: Pre-Process
+description: Pre-processing step of the ml pipeline.
 version: 1
+resources:
+    instance_count: 1
 
 code: .
+is_deterministic: true
 inputs:
   tracking_uri:
+    description: Specifies the tracking url for mlflow.
     type: string
+    default: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
+    optional: false
   experiment_name:
+    description: Specifies the name of teh experiment.
     type: string
+    optional: false
   input_data:
-    type: uri_folder
+    description: Specifies the input dataset.
+    type: mltable
     mode: ro_mount
+    optional: false
+  validation_size:
+    description: Specifies the size of the validation dataset in percent.
+    type: number
+    optional: true
+    default: 0.2
 outputs:
-  output_data:
-    type: uri_folder
+  output_data_train:
+    description: Specifies the output dataset for training.
+    type: mltable
+    mode: rw_mount
+  output_data_validation:
+    description: Specifies the output dataset for validation.
+    type: mltable
+    mode: rw_mount
 environment:
   conda_file: ./conda.yml
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
@@ -23,3 +45,7 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  --input-data ${{inputs.input_data}}
+  --validation-size ${{inputs.validation_size}}
+  --output-data-train ${{outputs.output_data_train}}
+  --output-data-validation ${{outputs.output_data_validation}}

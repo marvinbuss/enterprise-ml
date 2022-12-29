@@ -52,7 +52,7 @@ resource synapse 'Microsoft.Synapse/workspaces@2021-06-01' = {
       linkedAccessCheckOnTargetResource: true
       preventDataExfiltration: true
     }
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: 'Enabled'
     purviewConfiguration: empty(purviewId) ? {} : {
       purviewResourceId: purviewId
     }
