@@ -26,8 +26,7 @@ inputs:
     optional: false
   input_model:
     description: Specifies the input model.
-    type: uri_folder
-    mode: ro_mount
+    type: mlflow_model
     optional: false
 outputs:
   output_data:
