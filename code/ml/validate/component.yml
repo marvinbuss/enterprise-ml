@@ -30,8 +30,8 @@ inputs:
     optional: false
 outputs:
   output_data:
-    description: Specifies the output dataset.
-    type: mltable
+    description: Specifies the output.
+    type: uri_folder
     mode: rw_mount
 environment:
   conda_file: ./conda.yml
