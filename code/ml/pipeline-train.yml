@@ -5,7 +5,7 @@ display_name: Training Pipeline
 description: Training pipeline job with components using environment defined by a conda file.
 
 settings:
-  default_datastore: azureml:entmldevstorage001default
+  default_datastore: azureml:workspaceblobstore
   default_compute: azureml:cpucluster001
   continue_on_step_failure: false
   force_rerun: false
@@ -14,6 +14,7 @@ experiment_name: training
 
 inputs:
   tracking_uri: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
+  experiment_name: training
   raw_data:
     type: mltable
     path: azureml:diabetes_mltable:5
@@ -40,7 +41,7 @@ jobs:
     compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
-      experiment_name: ${{parent.experiment_name}}
+      experiment_name: ${{parent.inputs.experiment_name}}
       test_size: ${{parent.inputs.test_size}}
       input_data: ${{parent.inputs.raw_data}}
     outputs:
@@ -53,7 +54,7 @@ jobs:
     compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
-      experiment_name: ${{parent.experiment_name}}
+      experiment_name: ${{parent.inputs.experiment_name}}
       svr_kernel: 'rbf'
       svr_degree: 3
       input_data: ${{parent.jobs.preprocess.outputs.output_data_train}}
@@ -66,7 +67,7 @@ jobs:
     compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
-      experiment_name: ${{parent.experiment_name}}
+      experiment_name: ${{parent.inputs.experiment_name}}
       input_data: ${{parent.jobs.preprocess.outputs.output_data_test}}
       input_model: ${{parent.jobs.train.outputs.output_data}}
     outputs:
