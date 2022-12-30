@@ -42,9 +42,9 @@ def main(args: argparse.Namespace) -> None:
         X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
 
         # Create grid for grid search
-        gamma = compute_value_range(20, -10, 4)
-        C = compute_value_range(20, -4, 7)
-        epsilon = compute_value_range(10, -8, -1)
+        gamma = compute_value_range(5, -10, 4)
+        C = compute_value_range(5, -4, 7)
+        epsilon = compute_value_range(5, -8, -1)
         parameters = {
             "C": C,
             "gamma": gamma
