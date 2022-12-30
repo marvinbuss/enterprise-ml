@@ -3,28 +3,9 @@ import os
 
 import mlflow
 import mltable
+from sklearn.metrics import explained_variance_score, mean_absolute_error, r2_score
 
 RANDOM_STATE = 0
-
-
-def create_mltable(path: str, file_name: str) -> None:
-    """Creates an MLTable definition at the provided path.
-
-    path (str): The path where the MLTable file will be created.
-    file_name (str): The file name referenced in the MLTable file.
-    RETURNS (None): Nothing gets returned.
-    """
-    mltable_def = f"""
-    type: mltable
-    paths:
-    - file: ./{file_name}
-    transformations:
-    - read_parquet:
-        include_path_column: false
-    """
-
-    with open(os.path.join(path, "MLTable"), "w") as f:
-        f.write(mltable_def)
 
 
 def main(args: argparse.Namespace) -> None:
@@ -37,7 +18,36 @@ def main(args: argparse.Namespace) -> None:
     df = tbl.to_pandas_dataframe()
 
     with mlflow.start_run() as mlflow_run:
-        mlflow.log_param("hello", "world")
+        # Prepare data
+        X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
+
+        # Load model
+        mlmodel_path = os.path.join(args.input_model, "MLmodel")
+        cls = mlflow.sklearn.load_model(model_uri=mlmodel_path)
+
+        # Use Test Data to calculate accuracy metrics
+        y_pred = cls.predict(X=X)
+        mae = mean_absolute_error(y_true=y, y_pred=y_pred)
+        r2s = r2_score(y_true=y, y_pred=y_pred)
+        evs = explained_variance_score(y_true=y, y_pred=y_pred)
+
+        # Log parameters and metrics
+        mlflow.log_metric("mean_absolute_error", mae)
+        mlflow.log_metric("r2_score", r2s)
+        mlflow.log_metric("explained_variance_score", evs)
+
+        # Get Run ID from model path
+        run_id = ""
+        with open(mlmodel_path, "r") as modelfile:
+            for line in modelfile:
+                if "run_id" in line:
+                    run_id = line.split(":")[1].strip()
+
+        # Construct Model URI from run ID extract previously
+        model_uri = f"runs:/{run_id}/outputs/"
+
+        # Register model
+        mlflow.register_model(model_uri, args.model_name)
 
 
 def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
@@ -70,6 +80,15 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--input-data", dest="input_data", type=str, help="Path to input dataset."
+    )
+    parser.add_argument(
+        "--input-model", dest="input_model", type=str, help="Path to input model."
+    )
+    parser.add_argument(
+        "--model-name",
+        dest="model_name",
+        type=str,
+        help="Model name to use for registration.",
     )
     parser.add_argument(
         "--output-data",
