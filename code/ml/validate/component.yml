@@ -3,7 +3,7 @@ type: command
 name: validate
 display_name: Validate
 description: Validation step of the ml pipeline.
-version: 1
+version: 3
 resources:
     instance_count: 1
 
@@ -26,13 +26,12 @@ inputs:
     optional: false
   input_model:
     description: Specifies the input model.
-    type: uri_folder
-    mode: ro_mount
+    type: mlflow_model
     optional: false
 outputs:
   output_data:
-    description: Specifies the output dataset.
-    type: mltable
+    description: Specifies the output.
+    type: uri_folder
     mode: rw_mount
 environment:
   conda_file: ./conda.yml
