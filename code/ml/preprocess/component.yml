@@ -3,7 +3,7 @@ type: command
 name: preprocess
 display_name: Pre-Process
 description: Pre-processing step of the ml pipeline.
-version: 1
+version: 3
 resources:
     instance_count: 1
 
@@ -45,7 +45,7 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
-  --test-size ${{inputs.test_size}}
+  --test-size $[[inputs.test_size]]
   --input-data ${{inputs.input_data}}
   --output-data-train ${{outputs.output_data_train}}
   --output-data-test ${{outputs.output_data_test}}
