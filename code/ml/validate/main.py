@@ -1,9 +1,15 @@
 import argparse
 import os
+from pathlib import Path
 
 import mlflow
 import mltable
-from sklearn.metrics import explained_variance_score, mean_absolute_error, r2_score
+from sklearn.metrics import (
+    explained_variance_score,
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score,
+)
 
 RANDOM_STATE = 0
 
@@ -22,21 +28,30 @@ def main(args: argparse.Namespace) -> None:
         X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
 
         # Load model
-        mlmodel_path = os.path.join(args.input_model, "MLmodel")
-        cls = mlflow.sklearn.load_model(model_uri=mlmodel_path)
+        cls = mlflow.sklearn.load_model(args.input_model)
 
         # Use Test Data to calculate accuracy metrics
         y_pred = cls.predict(X=X)
         mae = mean_absolute_error(y_true=y, y_pred=y_pred)
+        mse = mean_squared_error(y_true=y, y_pred=y_pred)
         r2s = r2_score(y_true=y, y_pred=y_pred)
         evs = explained_variance_score(y_true=y, y_pred=y_pred)
 
+        # Write score report
+        with open(os.path.join(args.output_data, "validation.text"), "w") as f:
+            f.write(f"Mean squared error: {mse}")
+            f.write(f"Mean absolute error: {mae}")
+            f.write(f"R2 score: {r2s}")
+            f.write(f"Explained variance score: {evs}")
+
         # Log parameters and metrics
         mlflow.log_metric("mean_absolute_error", mae)
+        mlflow.log_metric("mean_squared_error", mse)
         mlflow.log_metric("r2_score", r2s)
         mlflow.log_metric("explained_variance_score", evs)
 
         # Get Run ID from model path
+        mlmodel_path = os.path.join(args.input_model, "MLmodel")
         run_id = ""
         with open(mlmodel_path, "r") as modelfile:
             for line in modelfile:
