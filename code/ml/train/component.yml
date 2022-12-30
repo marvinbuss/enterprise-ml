@@ -32,9 +32,10 @@ inputs:
     default: "rbf"
   svr_degree:
     description: Specifies the degree for the support vector regression.
-    type: number
+    type: integer
     optional: true
-    default: 0.2
+    default: 3
+    min: 0
   input_data:
     description: Specifies the input dataset.
     type: mltable
