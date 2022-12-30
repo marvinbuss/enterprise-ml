@@ -5,24 +5,69 @@ display_name: Training Pipeline
 description: Training pipeline job with components using environment defined by a conda file.
 
 settings:
-  default_datastore: azureml:entmldevlake001data
+  default_datastore: azureml:entmldevstorage001default
   default_compute: azureml:cpu-cluster
   continue_on_step_failure: false
   force_rerun: false
 
 experiment_name: training
+
+inputs:
+  tracking_uri: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
+  raw_data:
+    type: mltable
+    path: azureml:diabetes_mltable:5
+  test_size: 0.2
+
+outputs:
+  train_data:
+    type: mltable
+    mode: rw_mount
+  test_data:
+    type: mltable
+    mode: rw_mount
+  best_model:
+    type: mlflow_model
+    mode: rw_mount
+  validation_report:
+    type: uri_folder
+    mode: rw_mount
+
 jobs:
   preprocess:
     type: command
     component: ./preprocess/component.yml
     compute: azureml:cpu-cluster
+    inputs:
+      tracking_uri: ${{parent.inputs.tracking_uri}}
+      experiment_name: ${{parent.experiment_name}}
+      test_size: ${{parent.inputs.test_size}}
+      input_data: ${{parent.inputs.raw_data}}
+    outputs:
+      output_data_train: ${{parent.outputs.train_data}}
+      output_data_test: ${{parent.outputs.test_data}}
 
   train:
     type: command
     component: ./train/component.yml
     compute: azureml:cpu-cluster
+    inputs:
+      tracking_uri: ${{parent.inputs.tracking_uri}}
+      experiment_name: ${{parent.experiment_name}}
+      svr_kernel: 'rbf'
+      svr_degree: 3
+      input_data: ${{parent.jobs.preprocess.outputs.output_data_train}}
+    outputs:
+      output_data: ${{parent.outputs.best_model}}
 
   validate:
     type: command
     component: ./validate/component.yml
     compute: azureml:cpu-cluster
+    inputs:
+      tracking_uri: ${{parent.inputs.tracking_uri}}
+      experiment_name: ${{parent.experiment_name}}
+      input_data: ${{parent.jobs.preprocess.outputs.output_data_test}}
+      input_model: ${{parent.jobs.train.outputs.output_data}}
+    outputs:
+      output_data: ${{parent.outputs.validation_report}}
