@@ -9,3 +9,5 @@ dependencies:
     - mltable~=1.0.0
     - azureml-mlflow~=1.48.0
     - azureml-dataprep[pandas]~=4.8.3
+    - numpy~=1.24.1
+    - scikit-learn~=1.2.0
