@@ -6,7 +6,7 @@ description: Training pipeline job with components using environment defined by 
 
 settings:
   default_datastore: azureml:entmldevstorage001default
-  default_compute: azureml:cpu-cluster
+  default_compute: azureml:cpucluster001
   continue_on_step_failure: false
   force_rerun: false
 
@@ -37,7 +37,7 @@ jobs:
   preprocess:
     type: command
     component: ./preprocess/component.yml
-    compute: azureml:cpu-cluster
+    compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
       experiment_name: ${{parent.experiment_name}}
@@ -50,7 +50,7 @@ jobs:
   train:
     type: command
     component: ./train/component.yml
-    compute: azureml:cpu-cluster
+    compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
       experiment_name: ${{parent.experiment_name}}
@@ -63,7 +63,7 @@ jobs:
   validate:
     type: command
     component: ./validate/component.yml
-    compute: azureml:cpu-cluster
+    compute: azureml:cpucluster001
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
       experiment_name: ${{parent.experiment_name}}
