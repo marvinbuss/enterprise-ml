@@ -82,18 +82,30 @@ def main(args: argparse.Namespace) -> None:
             y=y,
         )
 
-        # Save model
-        mlflow.sklearn.save_model(clf.best_estimator_, args.output_data)
+        # Infer signature
+        y_pred = clf.predict(X=X)
+        signature = mlflow.models.signature.infer_signature(X, y_pred)
 
         # Log parameters and metrics
         mlflow.log_param("kernel", args.svr_kernel)
         mlflow.log_param("degree", args.svr_degree)
         mlflow.log_metric("best_score", clf.best_score_)
         mlflow.log_metrics(clf.best_params_)
-        mlflow.log_metrics(clf.cv_results_)
+        mlflow.log_dict(clf.cv_results_, "cv_results.yml")
         mlflow.log_metric("refit_time", clf.refit_time_)
         mlflow.log_metric("cross_validation_splits", clf.n_splits_)
-        mlflow.sklearn.log_model(clf.best_estimator_, "SupportVectorRegression")
+
+        # Track and copy model to output
+        mlflow.sklearn.save_model(
+            clf.best_estimator_,
+            args.output_data,
+            signature=signature,
+            input_example=X.sample(n=1),
+            metadata={
+                "train_run_id": mlflow_run.info.run_id,
+                "train_run_name": mlflow_run.info.run_name,
+            },
+        )
 
 
 def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
@@ -137,7 +149,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         help="Degree for poly kernel.",
         default=3,
-        min_value=0,
+    )
+    parser.add_argument(
+        "--target-column-name",
+        dest="target_column_name",
+        type=str,
+        help="Name of the target column for the regression problem.",
     )
     parser.add_argument(
         "--input-data", dest="input_data", type=str, help="Path to input dataset."
