@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 RANDOM_STATE = 0
+MODEL_ARTIFACT_NAME = "model"
 
 
 def create_mltable(path: str, file_name: str) -> None:
@@ -68,7 +69,24 @@ def main(args: argparse.Namespace) -> None:
         mlflow.log_param("test_size", args.test_size)
         mlflow.log_metrics(metrics=mean)
         mlflow.log_metrics(metrics=scale)
-        mlflow.sklearn.log_model(scaler_model, "StandardScaler")
+
+        # Infer signature
+        df_norm = scaler_model.transform(X=df)
+        signature = mlflow.models.signature.infer_signature(df, df_norm)
+
+        # Log and register model
+        mlflow.sklearn.log_model(
+            scaler_model,
+            MODEL_ARTIFACT_NAME,
+            registered_model_name=args.model_name,
+            signature=signature,
+            input_example=df.sample(n=1),
+            pyfunc_predict_fn="transform"
+            metadata={
+                "val_run_id": mlflow_run.info.run_id,
+                "val_run_name": mlflow_run.info.run_name,
+            },
+        )
 
         # Save data
         train_file_name = "diabetes.parquet"
@@ -128,6 +146,13 @@ def parse_args() -> argparse.Namespace:
         type=float,
         help="Size of the test dataset in percent.",
         default=0.2,
+    )
+    parser.add_argument(
+        "--model-name",
+        dest="model_name",
+        type=str,
+        help="Model name to use for registration.",
+        default="scaler",
     )
     parser.add_argument(
         "--input-data", dest="input_data", type=str, help="Path to input dataset."

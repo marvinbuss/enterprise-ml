@@ -102,16 +102,16 @@ def parse_args() -> argparse.Namespace:
         help="Name of the target column for the regression problem.",
     )
     parser.add_argument(
-        "--input-data", dest="input_data", type=str, help="Path to input dataset."
-    )
-    parser.add_argument(
-        "--input-model", dest="input_model", type=str, help="Path to input model."
-    )
-    parser.add_argument(
         "--model-name",
         dest="model_name",
         type=str,
         help="Model name to use for registration.",
+    )
+    parser.add_argument(
+        "--input-data", dest="input_data", type=str, help="Path to input dataset."
+    )
+    parser.add_argument(
+        "--input-model", dest="input_model", type=str, help="Path to input model."
     )
     parser.add_argument(
         "--output-data",
