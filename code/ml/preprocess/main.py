@@ -81,7 +81,7 @@ def main(args: argparse.Namespace) -> None:
             registered_model_name=args.model_name,
             signature=signature,
             input_example=df.sample(n=1),
-            pyfunc_predict_fn="transform"
+            pyfunc_predict_fn="transform",
             metadata={
                 "val_run_id": mlflow_run.info.run_id,
                 "val_run_name": mlflow_run.info.run_name,
