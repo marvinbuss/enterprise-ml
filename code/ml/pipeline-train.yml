@@ -69,6 +69,7 @@ jobs:
     inputs:
       tracking_uri: ${{parent.inputs.tracking_uri}}
       experiment_name: ${{parent.inputs.experiment_name}}
+      target_column_name: ${{parent.inputs.target_column_name}}
       input_data: ${{parent.jobs.preprocess.outputs.output_data_test}}
       input_model: ${{parent.jobs.train.outputs.output_data}}
     outputs:

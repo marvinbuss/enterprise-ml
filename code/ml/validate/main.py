@@ -94,6 +94,12 @@ def parse_args() -> argparse.Namespace:
         help="MLFlow experiment name",
     )
     parser.add_argument(
+        "--target-column-name",
+        dest="target_column_name",
+        type=str,
+        help="Name of the target column for the regression problem.",
+    )
+    parser.add_argument(
         "--input-data", dest="input_data", type=str, help="Path to input dataset."
     )
     parser.add_argument(

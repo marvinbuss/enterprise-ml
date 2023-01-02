@@ -19,6 +19,10 @@ inputs:
     description: Specifies the name of teh experiment.
     type: string
     optional: false
+  target_column_name:
+    description: Specifies the name of the target column for the regression problem.
+    type: string
+    optional: false
   input_data:
     description: Specifies the input dataset.
     type: mltable
@@ -40,5 +44,6 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  --target-column-name ${{inputs.target_column_name}}
   --input-data ${{inputs.input_data}}
   --output-data ${{outputs.output_data}}
