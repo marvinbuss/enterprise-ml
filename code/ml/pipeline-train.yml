@@ -15,6 +15,7 @@ experiment_name: training
 inputs:
   tracking_uri: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
   experiment_name: training
+  model_name: supportvectorclassifier
   raw_data:
     type: mltable
     path: azureml:diabetes_mltable:5
@@ -72,5 +73,6 @@ jobs:
       target_column_name: ${{parent.inputs.target_column_name}}
       input_data: ${{parent.jobs.preprocess.outputs.output_data_test}}
       input_model: ${{parent.jobs.train.outputs.output_data}}
+      model_name: ${{parent.inputs.model_name}}
     outputs:
       output_data: ${{parent.outputs.validation_report}}
