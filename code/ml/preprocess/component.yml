@@ -24,6 +24,11 @@ inputs:
     type: number
     optional: true
     default: 0.2
+  model_name:
+    description: Specifies the name of the registered model.
+    type: string
+    optional: false
+    default: scaler
   input_data:
     description: Specifies the input dataset.
     type: mltable
@@ -46,6 +51,7 @@ command: >-
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
   $[[--test-size ${{inputs.test_size}}]]
+  --model-name ${{inputs.model_name}}
   --input-data ${{inputs.input_data}}
   --output-data-train ${{outputs.output_data_train}}
   --output-data-test ${{outputs.output_data_test}}

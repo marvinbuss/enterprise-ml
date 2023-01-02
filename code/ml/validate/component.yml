@@ -23,6 +23,10 @@ inputs:
     description: Specifies the name of the target column for the regression problem.
     type: string
     optional: false
+  model_name:
+    description: Specifies the name of the registered model.
+    type: string
+    optional: false
   input_data:
     description: Specifies the input dataset.
     type: mltable
@@ -31,10 +35,6 @@ inputs:
   input_model:
     description: Specifies the input model.
     type: mlflow_model
-    optional: false
-  model_name:
-    description: Specifies the name of the registered model.
-    type: string
     optional: false
 outputs:
   output_data:
@@ -49,7 +49,7 @@ command: >-
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
   --target-column-name ${{inputs.target_column_name}}
+  --model-name ${{inputs.model_name}}
   --input-data ${{inputs.input_data}}
   --input-model ${{inputs.input_model}}
-  --model-name ${{inputs.model_name}}
   --output-data ${{outputs.output_data}}
