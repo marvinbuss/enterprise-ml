@@ -18,6 +18,7 @@ inputs:
   raw_data:
     type: mltable
     path: azureml:diabetes_mltable:5
+  target_column_name: "Y"
   test_size: 0.2
 
 outputs:
@@ -29,7 +30,6 @@ outputs:
     mode: rw_mount
   best_model:
     type: mlflow_model
-    mode: rw_mount
   validation_report:
     type: uri_folder
     mode: rw_mount
@@ -57,6 +57,7 @@ jobs:
       experiment_name: ${{parent.inputs.experiment_name}}
       svr_kernel: 'rbf'
       svr_degree: 3
+      target_column_name: ${{parent.inputs.target_column_name}}
       input_data: ${{parent.jobs.preprocess.outputs.output_data_train}}
     outputs:
       output_data: ${{parent.outputs.best_model}}
