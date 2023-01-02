@@ -36,6 +36,10 @@ inputs:
     optional: true
     default: 3
     min: 0
+  target_column_name:
+    description: Specifies the name of the target column for the regression problem.
+    type: string
+    optional: false
   input_data:
     description: Specifies the input dataset.
     type: mltable
@@ -54,5 +58,6 @@ command: >-
   --experiment-name ${{inputs.experiment_name}}
   $[[--svr-kernel ${{inputs.svr_kernel}}]]
   $[[--svr-degree ${{inputs.svr_degree}}]]
+  --target-column-name ${{inputs.target_column_name}}
   --input-data ${{inputs.input_data}}
   --output-data ${{outputs.output_data}}
