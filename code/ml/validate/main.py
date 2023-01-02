@@ -1,6 +1,5 @@
 import argparse
 import os
-from pathlib import Path
 
 import mlflow
 import mltable
@@ -12,6 +11,7 @@ from sklearn.metrics import (
 )
 
 RANDOM_STATE = 0
+MODEL_ARTIFACT_NAME = "model"
 
 
 def main(args: argparse.Namespace) -> None:
@@ -28,10 +28,13 @@ def main(args: argparse.Namespace) -> None:
         X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
 
         # Load model
-        cls = mlflow.sklearn.load_model(args.input_model)
+        clf = mlflow.sklearn.load_model(args.input_model)
+
+        # Infer signature
+        y_pred = clf.predict(X=X)
+        signature = mlflow.models.signature.infer_signature(X, y_pred)
 
         # Use Test Data to calculate accuracy metrics
-        y_pred = cls.predict(X=X)
         mae = mean_absolute_error(y_true=y, y_pred=y_pred)
         mse = mean_squared_error(y_true=y, y_pred=y_pred)
         r2s = r2_score(y_true=y, y_pred=y_pred)
@@ -50,19 +53,18 @@ def main(args: argparse.Namespace) -> None:
         mlflow.log_metric("r2_score", r2s)
         mlflow.log_metric("explained_variance_score", evs)
 
-        # Get Run ID from model path
-        mlmodel_path = os.path.join(args.input_model, "MLmodel")
-        run_id = ""
-        with open(mlmodel_path, "r") as modelfile:
-            for line in modelfile:
-                if "run_id" in line:
-                    run_id = line.split(":")[1].strip()
-
-        # Construct Model URI from run ID extract previously
-        model_uri = f"runs:/{run_id}/outputs/"
-
-        # Register model
-        mlflow.register_model(model_uri, args.model_name)
+        # Log and register model
+        mlflow.sklearn.log_model(
+            clf,
+            MODEL_ARTIFACT_NAME,
+            registered_model_name=args.model_name,
+            signature=signature,
+            input_example=X.sample(n=1),
+            metadata={
+                "val_run_id": mlflow_run.info.run_id,
+                "val_run_name": mlflow_run.info.run_name,
+            },
+        )
 
 
 def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
