@@ -1,90 +1,60 @@
-import argparse
 import os
+from typing import List
 
 import mlflow
-import mltable
+import pandas as pd
 
 RANDOM_STATE = 0
+TARGET_COLUMN_NAME = "Y"
 
 
-def create_mltable(path: str, file_name: str) -> None:
-    """Creates an MLTable definition at the provided path.
+def init() -> None:
+    """Initializes MLFlow model.
 
-    path (str): The path where the MLTable file will be created.
-    file_name (str): The file name referenced in the MLTable file.
     RETURNS (None): Nothing gets returned.
     """
-    mltable_def = f"""
-    type: mltable
-    paths:
-    - file: ./{file_name}
-    transformations:
-    - read_parquet:
-        include_path_column: false
-    """
+    global model
 
-    with open(os.path.join(path, "MLTable"), "w") as f:
-        f.write(mltable_def)
-
-
-def main(args: argparse.Namespace) -> None:
-    """Main function orchestrating the step of the pipeline.
-
-    args (argparse.Namespace): The model that should be used for analyzing the text.
-    RETURNS (None): Nothing gets returned.
-    """
-    tbl = mltable.load(args.input_data)
-    df = tbl.to_pandas_dataframe()
-
-    with mlflow.start_run() as mlflow_run:
-        mlflow.log_param("hello", "world")
-
-
-def init_mlflow(tracking_uri: str, experiment_name: str) -> None:
-    """Initialized MLFlow if not already done through environment variables.
-
-    tracking_uri (str): The tracking URI for MLFLow.
-    experiment_name (str): The name of the experiment name for MLFLow.
-    RETURNS (None): Nothing gets returned.
-    """
-    if not os.environ.get("MLFLOW_TRACKING_URI", default=None):
-        mlflow.set_tracking_uri(uri=tracking_uri)
-    if not os.environ.get("MLFLOW_EXPERIMENT_NAME", default=None):
-        mlflow.set_experiment(experiment_name=experiment_name)
-
-
-def parse_args() -> argparse.Namespace:
-    """Parses command line arguments.
-
-    RETURNS (argparse.Namespace): Arguments parsed from command line.
-    """
-    parser = argparse.ArgumentParser(description="Arguments for pipeline step")
-    parser.add_argument(
-        "--tracking-uri", dest="tracking_uri", type=str, help="MLFlow Tracking URL"
+    model_path = os.path.join(
+        os.environ.get("AZUREML_MODEL_DIR", default=None), "model"
     )
-    parser.add_argument(
-        "--experiment-name",
-        dest="experiment_name",
-        type=str,
-        help="MLFlow experiment name",
-    )
-    parser.add_argument(
-        "--input-data", dest="input_data", type=str, help="Path to input dataset."
-    )
-    parser.add_argument(
-        "--output-data",
-        dest="output_data",
-        type=str,
-        help="Path to where output should be stored.",
-    )
-    args = parser.parse_args()
-    return args
+    model = mlflow.sklearn.load_model(model_path)
 
 
-if __name__ == "__main__":
-    args = parse_args()
-    init_mlflow(
-        tracking_uri=args.tracking_uri,
-        experiment_name=args.experiment_name,
+def run(mini_batch: List[str]) -> pd.DataFrame:
+    results = pd.DataFrame(
+        columns=[
+            "AGE",
+            "SEX",
+            "BMI",
+            "MAP",
+            "TC",
+            "LDL",
+            "HDL",
+            "TCH",
+            "LTG",
+            "GLU",
+            TARGET_COLUMN_NAME,
+        ]
     )
-    main(args=args)
+
+    for file_path in mini_batch:
+        # Read file
+        df = pd.read_parquet(
+            path=file_path,
+            engine="auto",
+            columns=None,
+            storage_options=None,
+            use_nullable_dtypes=False,
+        )
+
+        # Predict target column
+        y_pred = model.predict(df)
+
+        # Create dataframe
+        df[TARGET_COLUMN_NAME] = y_pred
+
+        # Concat results
+        results = pd.concat(objs=[results, df])
+
+    return results
