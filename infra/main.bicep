@@ -116,6 +116,10 @@ param privateDnsZoneIdSearch string = ''
 param privateDnsZoneIdBlob string = ''
 @description('Specifies the resource ID of the private DNS zone for File Storage.')
 param privateDnsZoneIdFile string = ''
+@description('Specifies the resource ID of the private DNS zone for Table Storage.')
+param privateDnsZoneIdTable string = ''
+@description('Specifies the resource ID of the private DNS zone for Queue Storage.')
+param privateDnsZoneIdQueue string = ''
 @description('Specifies the resource ID of the private DNS zone for Machine Learning API.')
 param privateDnsZoneIdMachineLearningApi string = ''
 @description('Specifies the resource ID of the private DNS zone for Machine Learning Notebooks.')
@@ -281,6 +285,8 @@ module storage001 'modules/services/storage.bicep' = {
     storageSkuName: 'Standard_LRS'
     privateDnsZoneIdBlob: privateDnsZoneIdBlob
     privateDnsZoneIdFile: privateDnsZoneIdFile
+    privateDnsZoneIdTable: privateDnsZoneIdTable
+    privateDnsZoneIdQueue: privateDnsZoneIdQueue
   }
 }
 
