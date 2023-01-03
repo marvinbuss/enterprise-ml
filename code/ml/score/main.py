@@ -6,6 +6,7 @@ import pandas as pd
 
 RANDOM_STATE = 0
 TARGET_COLUMN_NAME = "Y"
+MODEL_ARTIFACT_NAME = "model"
 
 
 def init() -> None:
@@ -15,13 +16,16 @@ def init() -> None:
     """
     global model
 
-    model_path = os.path.join(
-        os.environ.get("AZUREML_MODEL_DIR", default=None), "model"
-    )
+    model_path = os.path.join(os.environ.get("AZUREML_MODEL_DIR"), MODEL_ARTIFACT_NAME)
     model = mlflow.sklearn.load_model(model_path)
 
 
 def run(mini_batch: List[str]) -> pd.DataFrame:
+    """Initializes MLFlow model.
+
+    mini_batch (List[str]): List of strings specifying the path to individual files.
+    RETURNS (pd.DataFrame): Pandas DataFrame containing the data and prediction.
+    """
     results = pd.DataFrame(
         columns=[
             "AGE",
