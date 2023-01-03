@@ -5,7 +5,10 @@ from typing import List
 import mlflow
 import mltable
 import numpy as np
-from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
 RANDOM_STATE = 0
@@ -41,17 +44,11 @@ def main(args: argparse.Namespace) -> None:
         # Prepare data
         X, y = df.drop([args.target_column_name], axis=1), df[args.target_column_name]
 
-        # Create grid for grid search
-        gamma = compute_value_range(5, -10, 4)
-        C = compute_value_range(5, -4, 7)
-        epsilon = compute_value_range(5, -8, -1)
-        parameters = {
-            "C": C,
-            "gamma": gamma
-            if args.svr_kernel in ["rbf", "poly", "sigmoid"]
-            else "scale",
-            "epsilon": epsilon,
-        }
+        # Create preprocessor
+        preprocessor = make_pipeline(
+            SimpleImputer(strategy="mean"),
+            StandardScaler(copy=True, with_mean=True, with_std=True),
+        )
 
         # Create model
         model = SVR(
@@ -65,9 +62,26 @@ def main(args: argparse.Namespace) -> None:
             max_iter=-1,
         )
 
+        # Create pipeline
+        pipeline = Pipeline(
+            steps=[("preprocessor", preprocessor), ("model", model)], verbose=False
+        )
+
+        # Create grid for grid search
+        gamma = compute_value_range(5, -10, 4)
+        C = compute_value_range(5, -4, 7)
+        epsilon = compute_value_range(5, -8, -1)
+        parameters = {
+            "model__C": C,
+            "model__gamma": gamma
+            if args.svr_kernel in ["rbf", "poly", "sigmoid"]
+            else "scale",
+            "model__epsilon": epsilon,
+        }
+
         # Create grid search
         clf = GridSearchCV(
-            estimator=model,
+            estimator=pipeline,
             param_grid=parameters,
             scoring=None,
             n_jobs=-1,
