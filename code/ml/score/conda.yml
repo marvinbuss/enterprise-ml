@@ -9,3 +9,5 @@ dependencies:
     - azureml-mlflow~=1.48.0
     - azureml-dataprep[pandas]~=4.8.3
     - pandas~=1.5.2
+    - azureml-core~=1.48.0
+    - azureml-dataset-runtime[fuse]~=1.48.0
