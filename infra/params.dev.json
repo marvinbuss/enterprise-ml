@@ -121,6 +121,12 @@
         "privateDnsZoneIdFile": {
             "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"
         },
+        "privateDnsZoneIdTable": {
+            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.windows.net"
+        },
+        "privateDnsZoneIdQueue": {
+            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net"
+        },
         "privateDnsZoneIdMachineLearningApi": {
             "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.api.azureml.ms"
         },
