@@ -3,4 +3,4 @@ name: batch-endpoint-diabetes
 description: A batch endpoint for scoring diabetes data.
 auth_mode: aad_token
 defaults:
-    deployment_name: BatchEndpointDiabetes
+    deployment_name: batch-deployment-diabetes
