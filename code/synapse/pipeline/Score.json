@@ -26,6 +26,13 @@
 						"type": "IntegrationRuntimeReference"
 					},
 					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\n    \"properties\": {\n        \"input_data\": {\n            \"type\": \"uri_folder\",\n            \"path\": \"@{pipeline().parameters.input_path}\"\n        }\n    }\n}",
+						"type": "Expression"
+					},
 					"authentication": {
 						"type": "MSI",
 						"resource": "https://ml.azure.com"
@@ -45,10 +52,7 @@
 				"type": "string",
 				"defaultValue": "120"
 			},
-			"endpoint_input_uri": {
-				"type": "string"
-			},
-			"endpoint_output_uri": {
+			"input_path": {
 				"type": "string"
 			}
 		},
