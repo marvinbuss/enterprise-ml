@@ -33,6 +33,7 @@ param enableRoleAssignments bool = false
 
 // Variables
 var machineLearningPrivateEndpointName = '${machineLearning.name}-pe'
+var containerBuildComputeName = 'cpucluster001'
 var noPublicIpRegions = [
   'australiaeast'
   'eastasia'
@@ -68,7 +69,7 @@ resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-0
     }
     friendlyName: machineLearningName
     hbiWorkspace: true
-    imageBuildCompute: 'cpucluster001'
+    imageBuildCompute: containerBuildComputeName
     primaryUserAssignedIdentity: ''
     publicNetworkAccess: 'Enabled'
     // serviceManagedResourcesSettings: {
@@ -151,7 +152,7 @@ resource machineLearningSynapse001BigDataPool001 'Microsoft.MachineLearningServi
 
 resource machineLearningCpuCluster001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = {
   parent: machineLearning
-  name: 'cpucluster001'
+  name: containerBuildComputeName
   dependsOn: [
     machineLearningPrivateEndpoint
     machineLearningPrivateEndpointARecord
