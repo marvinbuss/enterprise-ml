@@ -11,3 +11,7 @@ dependencies:
     - numpy~=1.24.1
     - azureml-core~=1.48.0
     - azureml-dataset-runtime[fuse]~=1.48.0
+    - opencensus~=0.11.0
+    - opencensus-ext-logging~=0.1.1
+    - opencensus-ext-azure~=1.1.7
+    - inference-schema~=1.4
