@@ -144,6 +144,7 @@ var datalakeFileSystemScopes = [for datalakeFileSystemId in datalakeFileSystemId
   subscriptionId: length(split(datalakeFileSystemId, '/')) == 13 ? split(datalakeFileSystemId, '/')[2] : subscription().subscriptionId
   resourceGroupName: length(split(datalakeFileSystemId, '/')) == 13 ? split(datalakeFileSystemId, '/')[4] : resourceGroup().name
 }]
+var userAssignedIdentity001Name = '${prefix}-uai001'
 var keyvault001Name = '${name}-vault001'
 var synapse001Name = '${name}-synapse001'
 var datafactory001Name = '${name}-datafactory001'
@@ -156,6 +157,16 @@ var machineLearning001Name = '${name}-machinelearning001'
 var logAnalytics001Name = '${name}-loganalytics001'
 
 // Resources
+module userAssignedIdentity001 'modules/services/userassignedidentity.bicep' = {
+  name: 'userAssignedIdentity001'
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tags
+    userAssignedIdentityName: userAssignedIdentity001Name
+  }
+}
+
 module keyVault001 'modules/services/keyvault.bicep' = {
   name: 'keyVault001'
   scope: resourceGroup()
