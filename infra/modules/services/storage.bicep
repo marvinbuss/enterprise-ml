@@ -23,6 +23,9 @@ param storageSkuName string = 'Standard_LRS'
 param storageContainerNames array = [
   'default'
 ]
+param fileShareNames array = [
+  'azureml-filestore'
+]
 param privateDnsZoneIdBlob string = ''
 param privateDnsZoneIdFile string = ''
 param privateDnsZoneIdTable string = ''
@@ -220,6 +223,35 @@ resource storageContainers 'Microsoft.Storage/storageAccounts/blobServices/conta
   properties: {
     publicAccess: 'None'
     metadata: {}
+  }
+}]
+
+resource storageFileServices 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+  parent: storage
+  name: 'default'
+  properties: {
+    cors: {
+      corsRules: []
+    }
+    // protocolSettings: {
+    //   smb: {}
+    // }
+    shareDeleteRetentionPolicy: {
+      enabled: true
+      days: 7
+      // allowPermanentDelete: false
+    }
+  }
+}
+
+resource storageFileShares 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = [for fileShareName in fileShareNames: {
+  parent: storageFileServices
+  name: fileShareName
+  properties: {
+    accessTier: 'TransactionOptimized'
+    enabledProtocols: 'SMB'
+    metadata: {}
+    shareQuota: 5120
   }
 }]
 
