@@ -1,0 +1,7 @@
+{
+	"name": "purview001_blob",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.Storage/storageAccounts/scannortheuropefzavsia",
+		"groupId": "blob"
+	}
+}
