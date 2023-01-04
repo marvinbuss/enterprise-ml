@@ -1,6 +1,6 @@
-import os
 import json
 import logging
+import os
 
 import mlflow
 import numpy as np
@@ -35,7 +35,5 @@ def run(input: str) -> str:
     # Predict
     model_output = model.predict(model_input)
 
-    result = {
-        "prediction": model_output.tolist()
-    }
+    result = {"prediction": model_output.tolist()}
     return str(result)
