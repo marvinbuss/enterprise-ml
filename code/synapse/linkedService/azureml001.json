@@ -1,0 +1,18 @@
+{
+	"name": "azureml001",
+	"properties": {
+		"description": "Linked Service for azureml001.",
+		"annotations": [],
+		"type": "AzureMLService",
+		"typeProperties": {
+			"subscriptionId": "757c4165-0823-49f7-9678-5a85fe5e17cc",
+			"resourceGroupName": "e2e_aml_ref_imp_ds_rg",
+			"mlWorkspaceName": "entml-dev-machinelearning001",
+			"authentication": "MSI"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
