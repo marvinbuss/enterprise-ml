@@ -1,0 +1,63 @@
+{
+	"name": "Score",
+	"properties": {
+		"description": "Pipeline for scoring data.",
+		"activities": [
+			{
+				"name": "Invoke-Batch-Endpoint",
+				"description": "Invoke the batch endpoint using a REST API Call.",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.endpoint_uri",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\n    \"properties\": {\n        \"input_data\": {\n            \"type\": \"uri_folder\",\n            \"path\": \"@{pipeline().parameters.input_path}\"\n        }\n    }\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://ml.azure.com"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"endpoint_uri": {
+				"type": "string",
+				"defaultValue": "https://batch-endpoint-diabetes.northeurope.inference.ml.azure.com/jobs"
+			},
+			"api_version": {
+				"type": "string",
+				"defaultValue": "2022-10-01"
+			},
+			"poll_interval": {
+				"type": "string",
+				"defaultValue": "120"
+			},
+			"input_path": {
+				"type": "string",
+				"defaultValue": "azureml:diabetes_score@latest"
+			}
+		},
+		"annotations": []
+	}
+}
