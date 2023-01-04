@@ -1,0 +1,57 @@
+{
+	"name": "Score",
+	"properties": {
+		"description": "Pipeline for scoring data.",
+		"activities": [
+			{
+				"name": "Invoke-Batch-Endpoint",
+				"description": "Invoke the batch endpoint using a REST API Call.",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.endpoint_uri",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://ml.azure.com"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"endpoint_uri": {
+				"type": "string"
+			},
+			"api_version": {
+				"type": "string",
+				"defaultValue": "2022-10-01"
+			},
+			"poll_interval": {
+				"type": "string",
+				"defaultValue": "120"
+			},
+			"endpoint_input_uri": {
+				"type": "string"
+			},
+			"endpoint_output_uri": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
