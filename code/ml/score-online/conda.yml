@@ -1,0 +1,13 @@
+name: score
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - mlflow~=2.1.1
+    - azureml-mlflow~=1.48.0
+    - azureml-dataprep[pandas]~=4.8.3
+    - numpy~=1.24.1
+    - azureml-core~=1.48.0
+    - azureml-dataset-runtime[fuse]~=1.48.0
