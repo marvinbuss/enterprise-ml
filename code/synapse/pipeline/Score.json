@@ -42,7 +42,8 @@
 		],
 		"parameters": {
 			"endpoint_uri": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://batch-endpoint-diabetes.northeurope.inference.ml.azure.com/jobs"
 			},
 			"api_version": {
 				"type": "string",
