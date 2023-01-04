@@ -17,7 +17,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"mlPipelineId": null
+					"experimentName": "training",
+					"mlPipelineParameters": {
+						"tracking_uri": "azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001",
+						"experiment_name": "training",
+						"model_name": "supportvectorclassifier",
+						"target_column_name": "Y",
+						"test_size": "0.2"
+					},
+					"mlPipelineId": "d255c4c8-a6fe-4210-bc43-54e9541d674f"
 				},
 				"linkedServiceName": {
 					"referenceName": "azureml001",
