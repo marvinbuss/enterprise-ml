@@ -1,9 +1,11 @@
 $schema: https://azuremlschemas.azureedge.net/latest/managedOnlineEndpoint.schema.json
 name: online-endpoint-diabetes
 description: An online endpoint for scoring diabetes data.
+tags:
+  AllowlistedObjectIds: e0f92466-2554-438a-bc58-ec84bd26f9e7
 auth_mode: aad_token
 identity:
   type: system_assigned
 traffic:
-  blue: 100
+  batch-deployment-diabetes-blue: 100
 public_network_access: enabled
