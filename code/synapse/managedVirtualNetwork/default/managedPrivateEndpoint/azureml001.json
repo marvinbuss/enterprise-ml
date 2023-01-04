@@ -1,0 +1,7 @@
+{
+	"name": "azureml001",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001",
+		"groupId": "amlworkspace"
+	}
+}
