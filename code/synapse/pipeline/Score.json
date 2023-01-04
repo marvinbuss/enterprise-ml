@@ -4,9 +4,9 @@
 		"description": "Pipeline for scoring data.",
 		"activities": [
 			{
-				"name": "Invoke-Batch-Endpoint",
-				"description": "Invoke the batch endpoint using a REST API Call.",
-				"type": "WebActivity",
+				"name": "InvokeBatchScorePipeline",
+				"description": "Invoke the batch scoring pipeline.",
+				"type": "AzureMLExecutePipeline",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -17,26 +17,20 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": {
-						"value": "@pipeline().parameters.endpoint_uri",
-						"type": "Expression"
+					"experimentName": "batch-endpoint-diabetes",
+					"mlPipelineParameters": {
+						"NodeCount": "2",
+						"mini_batch_size": "2",
+						"run_max_try": "3",
+						"run_invocation_timeout": "300",
+						"logging_level": "INFO",
+						"append_row_file_name": "predictions.csv"
 					},
-					"connectVia": {
-						"referenceName": "AutoResolveIntegrationRuntime",
-						"type": "IntegrationRuntimeReference"
-					},
-					"method": "POST",
-					"headers": {
-						"Content-Type": "application/json"
-					},
-					"body": {
-						"value": "{\n    \"properties\": {\n        \"input_data\": {\n            \"type\": \"uri_folder\",\n            \"path\": \"@{pipeline().parameters.input_path}\"\n        }\n    }\n}",
-						"type": "Expression"
-					},
-					"authentication": {
-						"type": "MSI",
-						"resource": "https://ml.azure.com"
-					}
+					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775"
+				},
+				"linkedServiceName": {
+					"referenceName": "azureml001",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
