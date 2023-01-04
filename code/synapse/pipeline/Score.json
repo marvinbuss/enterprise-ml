@@ -54,7 +54,8 @@
 				"defaultValue": "120"
 			},
 			"input_path": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "azureml:diabetes_score@latest"
 			}
 		},
 		"annotations": []
