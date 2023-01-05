@@ -1,0 +1,30 @@
+{
+	"name": "DiabetesScore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake001",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filePath": {
+				"type": "string",
+				"defaultValue": "source"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "diabetes.parquet",
+				"folderPath": {
+					"value": "@dataset().filePath",
+					"type": "Expression"
+				},
+				"fileSystem": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
