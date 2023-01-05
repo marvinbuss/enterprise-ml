@@ -294,6 +294,9 @@ module storage001 'modules/services/storage.bicep' = {
     storageContainerNames: [
       'default'
     ]
+    fileShareNames: [
+      'azureml-filestore'
+    ]
     storageSkuName: 'Standard_LRS'
     privateDnsZoneIdBlob: privateDnsZoneIdBlob
     privateDnsZoneIdFile: privateDnsZoneIdFile
