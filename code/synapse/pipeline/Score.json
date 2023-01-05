@@ -34,7 +34,13 @@
 						"append_row_file_name": "predictions.csv",
 						"InputData": "{\n    \"dataset_param\": {\n        \"JobInputType\" : \"UriFolder\",\n        \"Uri\": \"azureml:diabetes_score@latest\"\n    }\n}"
 					},
-					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775"
+					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
+					"dataPathAssignments": {
+						"dataset_param": {
+							"JobInputType": "UriFolder",
+							"Uri": "azureml:diabetes_score@latest"
+						}
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "azureml001",
