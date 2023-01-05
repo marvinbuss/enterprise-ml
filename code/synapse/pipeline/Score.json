@@ -36,8 +36,8 @@
 					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
 					"dataPathAssignments": {
 						"dataset_param": {
-							"type": "uri_folder",
-							"path": "azureml:diabetes_score@latest"
+							"DataStoreName": "entmldevlake001data",
+							"RelativePath": "datasets/diabetes/score/"
 						}
 					}
 				},
