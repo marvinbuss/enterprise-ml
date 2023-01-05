@@ -11,3 +11,4 @@ dependencies:
     - azureml-dataprep[pandas]~=4.8.3
     - numpy~=1.24.1
     - scikit-learn~=1.2.0
+    - fastparquet~=2022.12.0
