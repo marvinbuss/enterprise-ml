@@ -56,7 +56,7 @@ def main(args: argparse.Namespace) -> None:
         train_file_name = "diabetes.parquet"
         train_df.to_parquet(
             path=os.path.join(args.output_data_train, train_file_name),
-            engine="auto",
+            engine="fastparquet",
             compression="snappy",
             index=None,
             partition_cols=None,
@@ -67,7 +67,7 @@ def main(args: argparse.Namespace) -> None:
         test_file_name = "diabetes.parquet"
         test_df.to_parquet(
             path=os.path.join(args.output_data_test, test_file_name),
-            engine="auto",
+            engine="fastparquet",
             compression="snappy",
             index=None,
             partition_cols=None,
