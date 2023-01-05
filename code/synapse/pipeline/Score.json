@@ -79,6 +79,128 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AGE",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "AGE",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "SEX",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "SEX",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "BMI",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "BMI",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "MAP",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "MAP",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "TC",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "TC",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							},
+							{
+								"source": {
+									"name": "LDL",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "LDL",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "HDL",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "HDL",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "TCH",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "TCH",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "LTG",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								},
+								"sink": {
+									"name": "LTG",
+									"type": "Double",
+									"physicalType": "DOUBLE"
+								}
+							},
+							{
+								"source": {
+									"name": "GLU",
+									"type": "Int64",
+									"physicalType": "INT64"
+								},
+								"sink": {
+									"name": "GLU",
+									"type": "Int64",
+									"physicalType": "INT_64"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
