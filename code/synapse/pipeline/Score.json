@@ -7,7 +7,14 @@
 				"name": "InvokeBatchScorePipeline",
 				"description": "Invoke the batch scoring pipeline.",
 				"type": "AzureMLExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "CopyScoreData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -32,6 +39,74 @@
 					"referenceName": "azureml001",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "CopyScoreData",
+				"description": "Copy score data into destination.",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": {
+								"value": "@pipeline().parameters.filePathSource",
+								"type": "Expression"
+							},
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DiabetesScore",
+						"type": "DatasetReference",
+						"parameters": {
+							"filePath": "source"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DiabetesScore",
+						"type": "DatasetReference",
+						"parameters": {
+							"filePath": {
+								"value": "@pipeline().parameters.filePathDestination",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
@@ -50,6 +125,14 @@
 			"input_path": {
 				"type": "string",
 				"defaultValue": "azureml:diabetes_score@latest"
+			},
+			"filePathSource": {
+				"type": "string",
+				"defaultValue": "source"
+			},
+			"filePathDestination": {
+				"type": "string",
+				"defaultValue": "datasets/diabetes/score"
 			}
 		},
 		"annotations": []
