@@ -1,7 +1,7 @@
 {
-	"name": "diabetes",
+	"name": "DiabetesTraining",
 	"properties": {
-		"description": "Diabetes dataset.",
+		"description": "Diabetes training dataset.",
 		"linkedServiceName": {
 			"referenceName": "datalake001",
 			"type": "LinkedServiceReference"
