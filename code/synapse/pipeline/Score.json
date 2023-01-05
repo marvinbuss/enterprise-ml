@@ -237,22 +237,62 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "InvokeBatchScorePipelineRest",
+				"description": "Invoke the batch scoring pipeline using REST.",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "CopyScoreData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.endpointUri",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": "{\n  \"properties\": {\n    \"InputData\": {\n        \"UriFolder\": {\n        \"jobInputType\" : \"UriFolder\",\n        \"uri\" : \"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1\"\n    }\n  }\n}",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://ml.azure.com"
+					}
+				}
 			}
 		],
 		"parameters": {
-			"endpoint_uri": {
+			"endpointUri": {
 				"type": "string",
 				"defaultValue": "https://batch-endpoint-diabetes.northeurope.inference.ml.azure.com/jobs"
 			},
-			"api_version": {
+			"apiVersion": {
 				"type": "string",
 				"defaultValue": "2022-10-01"
 			},
-			"poll_interval": {
+			"pollInterval": {
 				"type": "string",
 				"defaultValue": "120"
 			},
-			"input_path": {
+			"inputPath": {
 				"type": "string",
 				"defaultValue": "azureml:diabetes_score@latest"
 			},
