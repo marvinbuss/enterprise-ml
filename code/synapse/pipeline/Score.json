@@ -38,9 +38,9 @@
 					"dataPathAssignments": {
 						"dataset_param": {
 							"JobInputType": "UriFolder",
-							"Uri": "azureml:diabetes_score@latest",
+							"Uri": "azureml://subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourcegroups/e2e_aml_ref_imp_ds_rg/workspaces/entml-dev-machinelearning001/datastores/entmldevlake001data/paths/datasets/diabetes/score/",
 							"DataStoreName": "entmldevlake001data",
-							"RelativePath": "datasets/diabetes/score/"
+							"RelativePath": "azureml://subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourcegroups/e2e_aml_ref_imp_ds_rg/workspaces/entml-dev-machinelearning001/datastores/entmldevlake001data/paths/datasets/diabetes/score/"
 						}
 					}
 				},
