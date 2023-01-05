@@ -36,8 +36,9 @@
 					},
 					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
 					"dataPathAssignments": {
-						"InputData": {
-							"dataset_param": "azureml:diabetes_score@latest"
+						"dataset_param": {
+							"JobInputType": "uri_folder",
+							"Uri": "azureml:diabetes_score@latest"
 						}
 					}
 				},
