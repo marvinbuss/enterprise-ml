@@ -38,7 +38,9 @@
 					"dataPathAssignments": {
 						"dataset_param": {
 							"JobInputType": "UriFolder",
-							"Uri": "azureml:diabetes_score@latest"
+							"Uri": "azureml:diabetes_score@latest",
+							"DataStoreName": "entmldevlake001data",
+							"RelativePath": "datasets/diabetes/score/"
 						}
 					}
 				},
