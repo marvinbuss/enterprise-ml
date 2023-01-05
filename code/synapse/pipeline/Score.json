@@ -32,7 +32,7 @@
 						"run_invocation_timeout": "300",
 						"logging_level": "INFO",
 						"append_row_file_name": "predictions.csv",
-						"InputData": "{\n    \"dataset_param\": {\n        \"JobInputType\" : \"UriFolder\",\n        \"Uri\": \"azureml:diabetes_score@latest\"\n    }\n}"
+						"dataset_param": "{\n    \"JobInputType\" : \"UriFolder\",\n    \"Uri\": \"azureml:diabetes_score@latest\"\n}"
 					},
 					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
 					"dataPathAssignments": {
