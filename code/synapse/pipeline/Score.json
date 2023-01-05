@@ -31,14 +31,13 @@
 						"run_max_try": "3",
 						"run_invocation_timeout": "300",
 						"logging_level": "INFO",
-						"append_row_file_name": "predictions.csv",
-						"dataset_param": "azureml:diabetes_score@latest"
+						"append_row_file_name": "predictions.csv"
 					},
 					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
 					"dataPathAssignments": {
 						"dataset_param": {
-							"JobInputType": "uri_folder",
-							"Uri": "azureml:diabetes_score@latest"
+							"type": "uri_folder",
+							"path": "azureml:diabetes_score@latest"
 						}
 					}
 				},
