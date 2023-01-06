@@ -13,12 +13,6 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
-					},
-					{
-						"activity": "InvokeBatchScorePipelineRest",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
 				"policy": {
@@ -38,13 +32,12 @@
 						"run_invocation_timeout": "300",
 						"logging_level": "INFO",
 						"append_row_file_name": "predictions.csv",
-						"dataset_param": "{\n    \"JobInputType\" : \"UriFolder\",\n    \"Uri\": \"azureml:diabetes_score@latest\"\n}"
+						"InputData": "{\"UriFolder\":{\"jobInputType\":\"UriFolder\",\"uri\":\"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1\"}}"
 					},
 					"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
 					"dataPathAssignments": {
 						"UriFolder": {
 							"jobInputType": "UriFolder",
-							"mode": "ReadOnlyMount",
 							"uri": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1"
 						}
 					}
@@ -250,7 +243,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "CopyScoreData",
+						"activity": "InvokeBatchScorePipeline",
 						"dependencyConditions": [
 							"Succeeded"
 						]
