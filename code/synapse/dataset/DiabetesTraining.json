@@ -1,0 +1,67 @@
+{
+	"name": "DiabetesTraining",
+	"properties": {
+		"description": "Diabetes training dataset.",
+		"linkedServiceName": {
+			"referenceName": "datalake001",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "diabetes.parquet",
+				"folderPath": "datasets/diabetes/mltable",
+				"fileSystem": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "AGE",
+				"type": "INT64"
+			},
+			{
+				"name": "SEX",
+				"type": "INT64"
+			},
+			{
+				"name": "BMI",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "MAP",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "TC",
+				"type": "INT64"
+			},
+			{
+				"name": "LDL",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "HDL",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "TCH",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "LTG",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "GLU",
+				"type": "INT64"
+			},
+			{
+				"name": "Y",
+				"type": "INT64"
+			}
+		]
+	}
+}

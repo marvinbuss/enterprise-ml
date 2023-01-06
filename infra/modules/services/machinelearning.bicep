@@ -33,6 +33,7 @@ param enableRoleAssignments bool = false
 
 // Variables
 var machineLearningPrivateEndpointName = '${machineLearning.name}-pe'
+var containerBuildComputeName = 'cpucluster001'
 var noPublicIpRegions = [
   'australiaeast'
   'eastasia'
@@ -51,6 +52,13 @@ var noPublicIpRegions = [
   'westus2'
 ]
 
+var storageAccountName = length(split(storageAccountId, '/')) == 9 ? split(storageAccountId, '/')[8] : 'incorrectSegmentLength'
+
+// Existng resources
+resource storage001 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageAccountName
+}
+
 // Resources
 resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
   name: machineLearningName
@@ -68,7 +76,7 @@ resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-0
     }
     friendlyName: machineLearningName
     hbiWorkspace: true
-    imageBuildCompute: 'cpucluster001'
+    imageBuildCompute: containerBuildComputeName
     primaryUserAssignedIdentity: ''
     publicNetworkAccess: 'Enabled'
     // serviceManagedResourcesSettings: {
@@ -80,7 +88,7 @@ resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-0
     applicationInsights: applicationInsightsId
     containerRegistry: containerRegistryId
     keyVault: keyVaultId
-    storageAccount: storageAccountId
+    storageAccount: storage001.id
   }
 }
 
@@ -151,7 +159,7 @@ resource machineLearningSynapse001BigDataPool001 'Microsoft.MachineLearningServi
 
 resource machineLearningCpuCluster001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = {
   parent: machineLearning
-  name: 'cpucluster001'
+  name: containerBuildComputeName
   dependsOn: [
     machineLearningPrivateEndpoint
     machineLearningPrivateEndpointARecord
@@ -317,7 +325,49 @@ resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/wo
   }
 }
 
-resource machineLearningDatastores 'Microsoft.MachineLearningServices/workspaces/datastores@2022-10-01' = [for (datalakeFileSystemId, i) in datalakeFileSystemIds : if(length(split(datalakeFileSystemId, '/')) == 13) {
+// resource machineLearningDefaultBlobStorage 'Microsoft.MachineLearningServices/workspaces/datastores@2022-10-01' = {
+//   parent: machineLearning
+//   name: 'workspaceblobstore'
+//   properties: {
+//     datastoreType: 'AzureBlob'
+//     credentials: {
+//       credentialsType: 'AccountKey'
+//       secrets: {
+//         secretsType: 'AccountKey'
+//         key: storage001.listKeys().keys[0].value
+//       }
+//     }
+//     accountName: storage001.name
+//     containerName: 'default'
+//     description: 'Default blob storage for AML.'
+//     endpoint: environment().suffixes.storage
+//     protocol: 'https'
+//     serviceDataAccessAuthIdentity: 'WorkspaceSystemAssignedIdentity'
+//   }
+// }
+
+// resource machineLearningDefaultFileStorage 'Microsoft.MachineLearningServices/workspaces/datastores@2022-10-01' = {
+//   parent: machineLearning
+//   name: 'workspacefilestore'
+//   properties: {
+//     datastoreType: 'AzureFile'
+//     credentials: {
+//       credentialsType: 'AccountKey'
+//       secrets: {
+//         secretsType: 'AccountKey'
+//         key: storage001.listKeys().keys[0].value
+//       }
+//     }
+//     accountName: storage001.name
+//     fileShareName: 'azureml-filestore'
+//     description: 'Default file storage for AML.'
+//     endpoint: environment().suffixes.storage
+//     protocol: 'https'
+//     serviceDataAccessAuthIdentity: 'None'
+//   }
+// }
+
+resource machineLearningDatalakes 'Microsoft.MachineLearningServices/workspaces/datastores@2022-10-01' = [for (datalakeFileSystemId, i) in datalakeFileSystemIds : if(length(split(datalakeFileSystemId, '/')) == 13) {
   parent: machineLearning
   name: '${length(datalakeFileSystemIds) <= 0 ? 'undefined${i}' : split(datalakeFileSystemId, '/')[8]}${length(datalakeFileSystemIds) <= 0 ? 'undefined${i}' : last(split(datalakeFileSystemId, '/'))}'
   properties: {

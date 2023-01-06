@@ -49,10 +49,10 @@ resource synapse 'Microsoft.Synapse/workspaces@2021-06-01' = {
     managedVirtualNetwork: 'default'
     managedVirtualNetworkSettings: {
       allowedAadTenantIdsForLinking: []
-      linkedAccessCheckOnTargetResource: true
-      preventDataExfiltration: true
+      linkedAccessCheckOnTargetResource: false
+      preventDataExfiltration: false
     }
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: 'Enabled'
     purviewConfiguration: empty(purviewId) ? {} : {
       purviewResourceId: purviewId
     }

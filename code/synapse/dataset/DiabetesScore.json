@@ -1,18 +1,25 @@
 {
-	"name": "diabetes",
+	"name": "DiabetesScore",
 	"properties": {
-		"description": "Diabetes dataset.",
 		"linkedServiceName": {
 			"referenceName": "datalake001",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filePath": {
+				"type": "string",
+				"defaultValue": "source"
+			}
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "diabetes.parquet",
-				"folderPath": "datasets/diabetes/mltable",
+				"folderPath": {
+					"value": "@dataset().filePath",
+					"type": "Expression"
+				},
 				"fileSystem": "data"
 			},
 			"compressionCodec": "snappy"
@@ -56,10 +63,6 @@
 			},
 			{
 				"name": "GLU",
-				"type": "INT64"
-			},
-			{
-				"name": "Y",
 				"type": "INT64"
 			}
 		]

@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchDeployment.schema.json
+name: batch-deployment-diabetes
+description: A deployment using sklaern to predict diabetes.
+endpoint_name: batch-endpoint-diabetes
+model: azureml:supportvectorclassifier@latest
+code_configuration:
+    code: .
+    scoring_script: main.py
+environment:
+    conda_file: ./conda.yml
+    image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+compute: azureml:cpucluster001
+resources:
+    instance_count: 2
+max_concurrency_per_instance: 2
+mini_batch_size: 2
+output_action: append_row
+output_file_name: predictions.csv
+retry_settings:
+    max_retries: 3
+    timeout: 300
+error_threshold: -1
+logging_level: info

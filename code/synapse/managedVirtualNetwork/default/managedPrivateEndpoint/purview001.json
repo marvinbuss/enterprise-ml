@@ -1,0 +1,7 @@
+{
+	"name": "purview001",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_gov_rg/providers/Microsoft.Purview/accounts/entml-dev-purview001",
+		"groupId": "account"
+	}
+}

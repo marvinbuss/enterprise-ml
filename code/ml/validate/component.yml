@@ -2,20 +2,45 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: validate
 display_name: Validate
-version: 1
+description: Validation step of the ml pipeline.
+version: 3
+resources:
+    instance_count: 1
 
 code: .
+is_deterministic: true
 inputs:
   tracking_uri:
+    description: Specifies the tracking url for mlflow.
     type: string
+    default: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
+    optional: false
   experiment_name:
+    description: Specifies the name of teh experiment.
     type: string
+    optional: false
+  target_column_name:
+    description: Specifies the name of the target column for the regression problem.
+    type: string
+    optional: false
+  model_name:
+    description: Specifies the name of the registered model.
+    type: string
+    optional: false
   input_data:
-    type: uri_folder
+    description: Specifies the input dataset.
+    type: mltable
     mode: ro_mount
+    optional: false
+  input_model:
+    description: Specifies the input model.
+    type: mlflow_model
+    optional: false
 outputs:
   output_data:
+    description: Specifies the output.
     type: uri_folder
+    mode: rw_mount
 environment:
   conda_file: ./conda.yml
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
@@ -23,3 +48,8 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  --target-column-name ${{inputs.target_column_name}}
+  --model-name ${{inputs.model_name}}
+  --input-data ${{inputs.input_data}}
+  --input-model ${{inputs.input_model}}
+  --output-data ${{outputs.output_data}}

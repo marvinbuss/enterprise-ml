@@ -116,6 +116,10 @@ param privateDnsZoneIdSearch string = ''
 param privateDnsZoneIdBlob string = ''
 @description('Specifies the resource ID of the private DNS zone for File Storage.')
 param privateDnsZoneIdFile string = ''
+@description('Specifies the resource ID of the private DNS zone for Table Storage.')
+param privateDnsZoneIdTable string = ''
+@description('Specifies the resource ID of the private DNS zone for Queue Storage.')
+param privateDnsZoneIdQueue string = ''
 @description('Specifies the resource ID of the private DNS zone for Machine Learning API.')
 param privateDnsZoneIdMachineLearningApi string = ''
 @description('Specifies the resource ID of the private DNS zone for Machine Learning Notebooks.')
@@ -140,6 +144,7 @@ var datalakeFileSystemScopes = [for datalakeFileSystemId in datalakeFileSystemId
   subscriptionId: length(split(datalakeFileSystemId, '/')) == 13 ? split(datalakeFileSystemId, '/')[2] : subscription().subscriptionId
   resourceGroupName: length(split(datalakeFileSystemId, '/')) == 13 ? split(datalakeFileSystemId, '/')[4] : resourceGroup().name
 }]
+var userAssignedIdentity001Name = '${prefix}-uai001'
 var keyvault001Name = '${name}-vault001'
 var synapse001Name = '${name}-synapse001'
 var datafactory001Name = '${name}-datafactory001'
@@ -152,6 +157,16 @@ var machineLearning001Name = '${name}-machinelearning001'
 var logAnalytics001Name = '${name}-loganalytics001'
 
 // Resources
+module userAssignedIdentity001 'modules/services/userassignedidentity.bicep' = {
+  name: 'userAssignedIdentity001'
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tags
+    userAssignedIdentityName: userAssignedIdentity001Name
+  }
+}
+
 module keyVault001 'modules/services/keyvault.bicep' = {
   name: 'keyVault001'
   scope: resourceGroup()
@@ -183,16 +198,6 @@ module synapse001 'modules/services/synapse.bicep' = if (processingService == 's
     enableSqlPool: enableSqlPool
     synapseComputeSubnetId: ''
     synapseDefaultStorageAccountFileSystemId: synapseDefaultStorageAccountFileSystemId
-  }
-}
-
-module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentStorage.bicep' = if (processingService == 'synapse' && enableRoleAssignments) {
-  name: 'synapse001RoleAssignmentStorage'
-  scope: resourceGroup(synapseDefaultStorageAccountSubscriptionId, synapseDefaultStorageAccountResourceGroupName)
-  params: {
-    storageAccountFileSystemId: synapseDefaultStorageAccountFileSystemId
-    synapseId: processingService == 'synapse' ? synapse001.outputs.synapseId : ''
-    role: 'StorageBlobDataContributor'
   }
 }
 
@@ -255,6 +260,17 @@ module applicationInsights001 'modules/services/applicationinsights.bicep' = {
   }
 }
 
+module logAnalytics001 'modules/services/loganalytics.bicep' = if (enableMonitoring) {
+  name: 'logAnalytics001'
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tagsJoined
+    logAnalytics001Name: logAnalytics001Name
+    processingService: processingService
+  }
+}
+
 module containerRegistry001 'modules/services/containerregistry.bicep' = {
   name: 'containerRegistry001'
   scope: resourceGroup()
@@ -278,9 +294,14 @@ module storage001 'modules/services/storage.bicep' = {
     storageContainerNames: [
       'default'
     ]
+    fileShareNames: [
+      'azureml-filestore'
+    ]
     storageSkuName: 'Standard_LRS'
     privateDnsZoneIdBlob: privateDnsZoneIdBlob
     privateDnsZoneIdFile: privateDnsZoneIdFile
+    privateDnsZoneIdTable: privateDnsZoneIdTable
+    privateDnsZoneIdQueue: privateDnsZoneIdQueue
   }
 }
 
@@ -313,6 +334,7 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
   }
 }
 
+// Role assignments
 module machineLearning001RoleAssignmentContainerRegistry 'modules/auxiliary/machineLearningRoleAssignmentContainerRegistry.bicep' = if (!empty(externalContainerRegistryId) && enableRoleAssignments) {
   name: 'machineLearning001RoleAssignmentContainerRegistry'
   scope: resourceGroup(externalContainerRegistrySubscriptionId, externalContainerRegistryResourceGroupName)
@@ -333,14 +355,23 @@ module machineLearning001RoleAssignmentStorage 'modules/auxiliary/machineLearnin
   }
 }]
 
-module logAnalytics001 'modules/services/loganalytics.bicep' = if (enableMonitoring) {
-  name: 'logAnalytics001'
+module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentStorage.bicep' = if (processingService == 'synapse' && enableRoleAssignments) {
+  name: 'synapse001RoleAssignmentStorage'
+  scope: resourceGroup(synapseDefaultStorageAccountSubscriptionId, synapseDefaultStorageAccountResourceGroupName)
+  params: {
+    storageAccountFileSystemId: synapseDefaultStorageAccountFileSystemId
+    synapseId: processingService == 'synapse' ? synapse001.outputs.synapseId : ''
+    role: 'StorageBlobDataContributor'
+  }
+}
+
+module synapse001RoleAssignmentmachineLearning 'modules/auxiliary/synapseRoleAssignmentMachineLearning.bicep' = if (processingService == 'synapse' && enableRoleAssignments) {
+  name: 'synapse001RoleAssignmentmachineLearning'
   scope: resourceGroup()
   params: {
-    location: location
-    tags: tagsJoined
-    logAnalytics001Name: logAnalytics001Name
-    processingService: processingService
+    machineLearningId: machineLearning001.outputs.machineLearningId
+    synapseId: processingService == 'synapse' ? synapse001.outputs.synapseId : ''
+    role: 'Contributor'
   }
 }
 
