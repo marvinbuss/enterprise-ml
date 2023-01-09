@@ -1,0 +1,5 @@
+name: data-drift-detection
+dependencies:
+- pip:
+  - azureml-sdk
+  - azureml-datadrift
