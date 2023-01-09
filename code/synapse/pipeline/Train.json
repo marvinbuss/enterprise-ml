@@ -7,7 +7,14 @@
 				"name": "InvokeTrainingPipeline",
 				"description": "Invoke the training pipeline.",
 				"type": "AzureMLExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "CreateOrUpdateDeployment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -31,8 +38,63 @@
 					"referenceName": "azureml001",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "CreateOrUpdateDeployment",
+				"description": "Create or update the deployment",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?@{pipeline().parameters.apiVersion}",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "PATCH",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"properties": {
+							"model": "azureml:supportvectorclassifier@latest"
+						}
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://ml.azure.com"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"machineLearningId": {
+				"type": "string",
+				"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001"
+			},
+			"apiVersion": {
+				"type": "string",
+				"defaultValue": "2022-10-01"
+			},
+			"endpointName": {
+				"type": "string",
+				"defaultValue": "online-endpoint-diabetes"
+			},
+			"deploymentName": {
+				"type": "string",
+				"defaultValue": "batch-deployment-diabetes-blue"
+			}
+		},
 		"annotations": []
 	}
 }
