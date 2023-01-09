@@ -1,5 +1,5 @@
 {
-	"name": "SynapseScoreBinary",
+	"name": "DiabetesScoreBinary",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "datalake001",
