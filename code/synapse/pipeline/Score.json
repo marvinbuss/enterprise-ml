@@ -227,14 +227,8 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"properties": {
-							"InputData": {
-								"UriFolder": {
-									"jobInputType": "UriFolder",
-									"uri": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1"
-								}
-							}
-						}
+						"value": "{\n    \"properties\": {\n        \"InputData\": {\n            \"UriFolder\": {\n                \"jobInputType\":\"UriFolder\",\n                \"uri\": \"@{pipeline().parameters.inputPath}\"\n            }\n        }\n    }\n}",
+						"type": "Expression"
 					},
 					"authentication": {
 						"type": "MSI",
@@ -258,15 +252,7 @@
 			},
 			"inputPath": {
 				"type": "string",
-				"defaultValue": "azureml:diabetes_score@latest"
-			},
-			"filePathSource": {
-				"type": "string",
-				"defaultValue": "source"
-			},
-			"filePathDestination": {
-				"type": "string",
-				"defaultValue": "datasets/diabetes/score"
+				"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1"
 			}
 		},
 		"annotations": []
