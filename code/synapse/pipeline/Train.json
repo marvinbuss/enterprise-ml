@@ -54,7 +54,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?@{pipeline().parameters.apiVersion}",
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?api-version=@{pipeline().parameters.apiVersion}",
 						"type": "Expression"
 					},
 					"connectVia": {
