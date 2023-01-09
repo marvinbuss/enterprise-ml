@@ -72,7 +72,7 @@
 					},
 					"authentication": {
 						"type": "MSI",
-						"resource": "https://ml.azure.com"
+						"resource": "https://management.azure.com"
 					}
 				}
 			}
