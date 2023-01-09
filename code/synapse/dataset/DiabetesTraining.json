@@ -12,7 +12,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "diabetes.parquet",
-				"folderPath": "datasets/diabetes/mltable",
+				"folderPath": "datasets/diabetes/raw",
 				"fileSystem": "data"
 			},
 			"compressionCodec": "snappy"
