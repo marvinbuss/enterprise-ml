@@ -66,8 +66,12 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
+						"sku": {
+							"name": "Standard_DS1_v2",
+							"capacity": 1
+						},
 						"properties": {
-							"model": "azureml:supportvectorclassifier@latest"
+							"model": "azureml:supportvectorclassifier:5"
 						}
 					},
 					"authentication": {
