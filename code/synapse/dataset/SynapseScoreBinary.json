@@ -1,0 +1,17 @@
+{
+	"name": "SynapseScoreBinary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake001",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "data"
+			}
+		}
+	}
+}
