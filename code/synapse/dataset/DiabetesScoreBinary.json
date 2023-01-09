@@ -5,11 +5,21 @@
 			"referenceName": "datalake001",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filePath": {
+				"type": "string",
+				"defaultValue": "source"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().filePath",
+					"type": "Expression"
+				},
 				"fileSystem": "data"
 			}
 		}
