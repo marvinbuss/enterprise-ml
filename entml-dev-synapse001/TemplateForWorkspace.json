@@ -1,0 +1,1159 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "entml-dev-synapse001"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'entml-dev-synapse001-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:entml-dev-synapse001.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"serverless001_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'serverless001'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=entml-dev-synapse001-ondemand.sql.azuresynapse.net;Initial Catalog=@{linkedService().databaseName}"
+		},
+		"DiabetesScore_properties_linkedServiceName_reference": {
+			"type": "string",
+			"defaultValue": "datalake001"
+		},
+		"DiabetesTraining_properties_linkedServiceName_reference": {
+			"type": "string",
+			"defaultValue": "datalake001"
+		},
+		"azureml001_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "757c4165-0823-49f7-9678-5a85fe5e17cc"
+		},
+		"azureml001_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "e2e_aml_ref_imp_ds_rg"
+		},
+		"azureml001_properties_typeProperties_mlWorkspaceName": {
+			"type": "string",
+			"defaultValue": "entml-dev-machinelearning001"
+		},
+		"azureml001_properties_typeProperties_authentication": {
+			"type": "string",
+			"defaultValue": "MSI"
+		},
+		"datalake001_properties_typeProperties_blobEndpointUri": {
+			"type": "string",
+			"defaultValue": "https://entmldevlake001.dfs.core.windows.net/"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultSqlServer_properties_typeProperties_connectionString": {
+			"type": "string",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:entml-dev-synapse001.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultStorage_properties_typeProperties_blobEndpointUri": {
+			"type": "string",
+			"defaultValue": "https://entmldevlake001.dfs.core.windows.net"
+		},
+		"keyvault001_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://entml-dev-vault001.vault.azure.net/"
+		},
+		"serverless001_properties_typeProperties_connectionString": {
+			"type": "string",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=entml-dev-synapse001-ondemand.sql.azuresynapse.net;Initial Catalog=@{linkedService().databaseName}"
+		},
+		"azureml001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001"
+		},
+		"datalake001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_strg_rg/providers/Microsoft.Storage/storageAccounts/entmldevlake001"
+		},
+		"keyvault001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.KeyVault/vaults/entml-dev-vault001"
+		},
+		"purview001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_gov_rg/providers/Microsoft.Purview/accounts/entml-dev-purview001"
+		},
+		"purview001_blob_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.Storage/storageAccounts/scannortheuropefzavsia"
+		},
+		"purview001_namespace_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.EventHub/namespaces/Atlas-5eac9837-f5f6-42e1-ad90-50f04f0aacfc"
+		},
+		"purview001_queue_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.Storage/storageAccounts/scannortheuropefzavsia"
+		},
+		"synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.Synapse/workspaces/entml-dev-synapse001"
+		},
+		"synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns": {
+			"type": "array",
+			"defaultValue": [
+				"entml-dev-synapse001.4c9f8f04-97cc-4230-949f-c03f01a05d85.sql.azuresynapse.net"
+			]
+		},
+		"synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.Synapse/workspaces/entml-dev-synapse001"
+		},
+		"synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns": {
+			"type": "array",
+			"defaultValue": [
+				"entml-dev-synapse001-ondemand.4c9f8f04-97cc-4230-949f-c03f01a05d85.sql.azuresynapse.net"
+			]
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Score')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Pipeline for scoring data.",
+				"activities": [
+					{
+						"name": "InvokeBatchScorePipeline",
+						"description": "Invoke the batch scoring pipeline.",
+						"type": "AzureMLExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "CopyScoreData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"experimentName": "batch-endpoint-diabetes",
+							"mlPipelineParameters": {
+								"NodeCount": "2",
+								"mini_batch_size": "2",
+								"run_max_try": "3",
+								"run_invocation_timeout": "300",
+								"logging_level": "INFO",
+								"append_row_file_name": "predictions.csv",
+								"InputData": "{\"UriFolder\":{\"jobInputType\":\"UriFolder\",\"uri\":\"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1\"}}"
+							},
+							"mlPipelineId": "67328e51-6b86-4a9b-9f87-1ffb0941c775",
+							"dataPathAssignments": {
+								"UriFolder": {
+									"jobInputType": "UriFolder",
+									"uri": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "azureml001",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "CopyScoreData",
+						"description": "Copy score data into destination.",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": {
+										"value": "@pipeline().parameters.filePathSource",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*.parquet",
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "AGE",
+											"type": "Int64",
+											"physicalType": "INT64"
+										},
+										"sink": {
+											"name": "AGE",
+											"type": "Int64",
+											"physicalType": "INT_64"
+										}
+									},
+									{
+										"source": {
+											"name": "SEX",
+											"type": "Int64",
+											"physicalType": "INT64"
+										},
+										"sink": {
+											"name": "SEX",
+											"type": "Int64",
+											"physicalType": "INT_64"
+										}
+									},
+									{
+										"source": {
+											"name": "BMI",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "BMI",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "MAP",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "MAP",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "TC",
+											"type": "Int64",
+											"physicalType": "INT64"
+										},
+										"sink": {
+											"name": "TC",
+											"type": "Int64",
+											"physicalType": "INT_64"
+										}
+									},
+									{
+										"source": {
+											"name": "LDL",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "LDL",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "HDL",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "HDL",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "TCH",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "TCH",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "LTG",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										},
+										"sink": {
+											"name": "LTG",
+											"type": "Double",
+											"physicalType": "DOUBLE"
+										}
+									},
+									{
+										"source": {
+											"name": "GLU",
+											"type": "Int64",
+											"physicalType": "INT64"
+										},
+										"sink": {
+											"name": "GLU",
+											"type": "Int64",
+											"physicalType": "INT_64"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DiabetesScore",
+								"type": "DatasetReference",
+								"parameters": {
+									"filePath": "source"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DiabetesScore",
+								"type": "DatasetReference",
+								"parameters": {
+									"filePath": {
+										"value": "@pipeline().parameters.filePathDestination",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "InvokeBatchScorePipelineRest",
+						"description": "Invoke the batch scoring pipeline using REST.",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "InvokeBatchScorePipeline",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "@pipeline().parameters.endpointUri",
+								"type": "Expression"
+							},
+							"connectVia": {
+								"referenceName": "AutoResolveIntegrationRuntime",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"properties": {
+									"InputData": {
+										"UriFolder": {
+											"jobInputType": "UriFolder",
+											"uri": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/data/diabetes_score/versions/1"
+										}
+									}
+								}
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://ml.azure.com"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"endpointUri": {
+						"type": "string",
+						"defaultValue": "https://batch-endpoint-diabetes.northeurope.inference.ml.azure.com/jobs"
+					},
+					"apiVersion": {
+						"type": "string",
+						"defaultValue": "2022-10-01"
+					},
+					"pollInterval": {
+						"type": "string",
+						"defaultValue": "120"
+					},
+					"inputPath": {
+						"type": "string",
+						"defaultValue": "azureml:diabetes_score@latest"
+					},
+					"filePathSource": {
+						"type": "string",
+						"defaultValue": "source"
+					},
+					"filePathDestination": {
+						"type": "string",
+						"defaultValue": "datasets/diabetes/score"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/azureml001')]",
+				"[concat(variables('workspaceId'), '/datasets/DiabetesScore')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Train')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Pipeline for training models.",
+				"activities": [
+					{
+						"name": "InvokeTrainingPipeline",
+						"description": "Invoke the training pipeline.",
+						"type": "AzureMLExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"experimentName": "training",
+							"mlPipelineParameters": {
+								"tracking_uri": "azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001",
+								"experiment_name": "training",
+								"model_name": "supportvectorclassifier",
+								"target_column_name": "Y",
+								"test_size": "0.2"
+							},
+							"mlPipelineId": "d255c4c8-a6fe-4210-bc43-54e9541d674f"
+						},
+						"linkedServiceName": {
+							"referenceName": "azureml001",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/azureml001')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DiabetesScore')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('DiabetesScore_properties_linkedServiceName_reference')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filePath": {
+						"type": "string",
+						"defaultValue": "source"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().filePath",
+							"type": "Expression"
+						},
+						"fileSystem": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "AGE",
+						"type": "INT64"
+					},
+					{
+						"name": "SEX",
+						"type": "INT64"
+					},
+					{
+						"name": "BMI",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "MAP",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "TC",
+						"type": "INT64"
+					},
+					{
+						"name": "LDL",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "HDL",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "TCH",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "LTG",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "GLU",
+						"type": "INT64"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/', parameters('DiabetesScore_properties_linkedServiceName_reference'))]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DiabetesTraining')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Diabetes training dataset.",
+				"linkedServiceName": {
+					"referenceName": "[parameters('DiabetesTraining_properties_linkedServiceName_reference')]",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "diabetes.parquet",
+						"folderPath": "datasets/diabetes/mltable",
+						"fileSystem": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "AGE",
+						"type": "INT64"
+					},
+					{
+						"name": "SEX",
+						"type": "INT64"
+					},
+					{
+						"name": "BMI",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "MAP",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "TC",
+						"type": "INT64"
+					},
+					{
+						"name": "LDL",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "HDL",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "TCH",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "LTG",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "GLU",
+						"type": "INT64"
+					},
+					{
+						"name": "Y",
+						"type": "INT64"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/', parameters('DiabetesTraining_properties_linkedServiceName_reference'))]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/azureml001')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Linked Service for azureml001.",
+				"annotations": [],
+				"type": "AzureMLService",
+				"typeProperties": {
+					"subscriptionId": "[parameters('azureml001_properties_typeProperties_subscriptionId')]",
+					"resourceGroupName": "[parameters('azureml001_properties_typeProperties_resourceGroupName')]",
+					"mlWorkspaceName": "[parameters('azureml001_properties_typeProperties_mlWorkspaceName')]",
+					"authentication": "[parameters('azureml001_properties_typeProperties_authentication')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/datalake001')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Data Lake containing datasets.",
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('datalake001_properties_typeProperties_blobEndpointUri')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/entml-dev-synapse001-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": {
+						"type": "SecureString",
+						"value": "[parameters('entml-dev-synapse001-WorkspaceDefaultSqlServer_properties_typeProperties_connectionString')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/entml-dev-synapse001-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('entml-dev-synapse001-WorkspaceDefaultStorage_properties_typeProperties_blobEndpointUri')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/keyvault001')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Linked Service for keyvault001.",
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('keyvault001_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/serverless001')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Linked Service for serverless001.",
+				"parameters": {
+					"databaseName": {
+						"type": "string",
+						"defaultValue": "diabetesDatabase"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": {
+						"type": "SecureString",
+						"value": "[parameters('serverless001_properties_typeProperties_connectionString')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/diabetesDatabase')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "diabetesDatabase",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Description": "Database containing diabetes data.",
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://datasets@entmldevlake001.dfs.core.windows.net/diabetes",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "datalake001"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "diabetes",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "diabetesDatabase"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "AGE",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										}
+									},
+									{
+										"Name": "SEX",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										}
+									},
+									{
+										"Name": "BMI",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "MAP",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "TC",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										}
+									},
+									{
+										"Name": "LDL",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "HDL",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "TCH",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "LTG",
+										"OriginDataTypeName": {
+											"TypeName": "double",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "double"
+											}
+										}
+									},
+									{
+										"Name": "GLU",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										}
+									},
+									{
+										"Name": "Y",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://data@entmldevlake001.dfs.core.windows.net//datasets/diabetes/raw/diabetes.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://data@entmldevlake001.dfs.core.windows.net//datasets/diabetes/raw/diabetes.parquet",
+									"Properties": {
+										"LinkedServiceName": "datalake001",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/bigDataPool001')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 0,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.2",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": true,
+				"customLibraries": [],
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "northeurope"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/azureml001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('azureml001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "amlworkspace"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/datalake001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('datalake001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "dfs"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/keyvault001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('keyvault001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "vault"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/purview001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('purview001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "account"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/purview001_blob')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('purview001_blob_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "blob"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/purview001_namespace')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('purview001_namespace_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "namespace"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/purview001_queue')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('purview001_queue_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "queue"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/synapse-ws-sql--entml-dev-synapse001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "sql",
+				"fqdns": "[parameters('synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/synapse-ws-sqlOnDemand--entml-dev-synapse001')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "[parameters('synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId')]",
+				"groupId": "sqlOnDemand",
+				"fqdns": "[parameters('synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
+		}
+	]
+}

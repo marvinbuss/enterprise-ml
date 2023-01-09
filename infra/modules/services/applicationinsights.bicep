@@ -27,7 +27,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     ForceCustomerStorageForProfiler: false
     IngestionMode: 'LogAnalytics'
     publicNetworkAccessForIngestion: 'Enabled'
-    publicNetworkAccessForQuery: 'Disabled'
+    publicNetworkAccessForQuery: 'Enabled'
     Request_Source: 'rest'
     // SamplingPercentage: 50  // Uncomment, if you want to define the sampling percentage that should be used for the telemetry.
     WorkspaceResourceId: logAnalyticsWorkspaceId  // Uncomment, if you want to connect your application insights to the central log analytics workspace.
