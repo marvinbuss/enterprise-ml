@@ -1,0 +1,23 @@
+{
+	"name": "diabetesDatabase_copy_q1i",
+	"properties": {
+		"Name": "diabetesDatabase_copy_q1i",
+		"EntityType": "DATABASE",
+		"Description": "Database containing diabetes data.",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://datasets@entmldevlake001.dfs.core.windows.net/diabetes",
+			"Properties": {
+				"FormatType": "parquet",
+				"LinkedServiceName": "datalake001"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
