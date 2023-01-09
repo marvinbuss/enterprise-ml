@@ -249,7 +249,6 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
     properties: {
       applicationSharingPolicy: 'Personal'
       computeInstanceAuthorizationType: 'personal'
-      #disable-next-line BCP037
       enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
       #disable-next-line BCP037
       isolatedNetwork: false
@@ -297,7 +296,6 @@ resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/wo
     properties: {
       applicationSharingPolicy: 'Personal'
       computeInstanceAuthorizationType: 'personal'
-      #disable-next-line BCP037
       enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
       #disable-next-line BCP037
       isolatedNetwork: false
