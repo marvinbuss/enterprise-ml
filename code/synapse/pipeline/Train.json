@@ -147,7 +147,7 @@
 			},
 			"apiVersion": {
 				"type": "string",
-				"defaultValue": "2020-12-01-preview"
+				"defaultValue": "2022-10-01"
 			},
 			"endpointName": {
 				"type": "string",
