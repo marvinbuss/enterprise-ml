@@ -43,7 +43,14 @@
 				"name": "CreateOrUpdateDeployment",
 				"description": "Create or update the deployment",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "GetModel",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -73,6 +80,62 @@
 					"authentication": {
 						"type": "MSI",
 						"resource": "https://management.azure.com"
+					}
+				}
+			},
+			{
+				"name": "GetDeployment",
+				"description": "Get Deployment",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?api-version=@{pipeline().parameters.apiVersion}",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
+			},
+			{
+				"name": "GetModel",
+				"description": "Get Model",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "GetDeployment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
 					}
 				}
 			}
