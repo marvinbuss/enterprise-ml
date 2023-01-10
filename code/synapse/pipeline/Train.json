@@ -133,9 +133,18 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/models/@{pipeline().parameters.modelName}/versions?api-version=@{pipeline().parameters.apiVersion}&$orderBy=createdtime desc&$top=1",
+						"type": "Expression"
+					},
 					"connectVia": {
 						"referenceName": "AutoResolveIntegrationRuntime",
 						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
 					}
 				}
 			}
@@ -156,6 +165,10 @@
 			"deploymentName": {
 				"type": "string",
 				"defaultValue": "batch-deployment-diabetes-green"
+			},
+			"modelName": {
+				"type": "string",
+				"defaultValue": "supportvectorclassifier"
 			}
 		},
 		"annotations": []
