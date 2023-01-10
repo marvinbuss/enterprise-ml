@@ -68,7 +68,7 @@
 						"referenceName": "AutoResolveIntegrationRuntime",
 						"type": "IntegrationRuntimeReference"
 					},
-					"method": "PATCH",
+					"method": "PUT",
 					"headers": {
 						"Content-Type": "application/json"
 					},
