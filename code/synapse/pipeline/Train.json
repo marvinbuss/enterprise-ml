@@ -73,9 +73,8 @@
 						"Content-Type": "application/json"
 					},
 					"body": {
-						"properties": {
-							"model": "azureml:supportvectorclassifier:5"
-						}
+						"value": "{\n    \"location\": @{activity('GetDeployment').output.location},\n    \"tags\": {},\n    \"kind\": \"Managed\",\n    \"sku\": {\n        \"name\": \"Default\",\n        \"tier\": \"Standard\",\n        \"capacity\": 1\n    },\n    \"properties\": {\n        \"description\": \"A deployment using sklaern to predict diabetes.\",\n        \"properties\": {\n            \"AzureAsyncOperationUri\": \"https://management.azure.com/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/providers/Microsoft.MachineLearningServices/locations/northeurope/mfeOperationsStatus/od:27f93e8a-b02d-46c9-813d-44e249233787:14d4d5a6-aa3c-4a4c-9109-020aa98c1215?api-version=2022-10-01\"\n        },\n        \"codeConfiguration\": {\n            \"codeId\": \"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/codes/31c831dc-f524-4b09-abd2-b2bfaae5fd77/versions/1\",\n            \"scoringScript\": \"main.py\"\n        },\n        \"environmentId\": \"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/environments/CliV2AnonymousEnvironment/versions/b964c1f73ddc8f6d5c803a9913b770e4\",\n        \"environmentVariables\": {\n            \"TEST_KEY\": \"TEST_VALUE\"\n        },\n        \"scaleSettings\": {\n            \"scaleType\": \"Default\"\n        },\n        \"requestSettings\": {\n            \"maxQueueWait\": \"PT0S\",\n            \"requestTimeout\": \"PT5S\",\n            \"maxConcurrentRequestsPerInstance\": 1\n        },\n        \"modelMountPath\": null,\n        \"appInsightsEnabled\": true,\n        \"livenessProbe\": {\n            \"failureThreshold\": 30,\n            \"successThreshold\": 1,\n            \"timeout\": \"PT2S\",\n            \"period\": \"PT10S\",\n            \"initialDelay\": \"PT10S\"\n        },\n        \"readinessProbe\": {\n            \"failureThreshold\": 30,\n            \"successThreshold\": 1,\n            \"timeout\": \"PT2S\",\n            \"period\": \"PT10S\",\n            \"initialDelay\": \"PT10S\"\n        },\n        \"instanceType\": \"Standard_DS1_v2\",\n        \"model\": \"/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001/models/supportvectorclassifier/versions/6\",\n        \"egressPublicNetworkAccess\": \"Disabled\",\n        \"endpointComputeType\": \"Managed\"\n    }\n}",
+						"type": "Expression"
 					},
 					"authentication": {
 						"type": "MSI",
@@ -147,6 +146,26 @@
 						"resource": "https://management.azure.com"
 					}
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetDeployment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "test",
+					"value": {
+						"value": "@{activity('GetDeployment').output.location}",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -169,6 +188,11 @@
 			"modelName": {
 				"type": "string",
 				"defaultValue": "supportvectorclassifier"
+			}
+		},
+		"variables": {
+			"test": {
+				"type": "String"
 			}
 		},
 		"annotations": []
