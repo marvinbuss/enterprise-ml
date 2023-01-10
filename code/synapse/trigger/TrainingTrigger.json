@@ -1,0 +1,18 @@
+{
+	"name": "TrainingTrigger",
+	"properties": {
+		"description": "Trigger for retraining the model.",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2023-01-10T20:07:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
