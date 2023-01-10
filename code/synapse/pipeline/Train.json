@@ -88,7 +88,7 @@
 			},
 			"apiVersion": {
 				"type": "string",
-				"defaultValue": "2022-10-01"
+				"defaultValue": "2020-12-01-preview"
 			},
 			"endpointName": {
 				"type": "string",
@@ -96,7 +96,7 @@
 			},
 			"deploymentName": {
 				"type": "string",
-				"defaultValue": "batch-deployment-diabetes-blue"
+				"defaultValue": "batch-deployment-diabetes-green"
 			}
 		},
 		"annotations": []
