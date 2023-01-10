@@ -7,14 +7,7 @@
 				"name": "InvokeTrainingPipeline",
 				"description": "Invoke the training pipeline.",
 				"type": "AzureMLExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "CreateOrUpdateDeployment",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -86,7 +79,14 @@
 				"name": "GetDeployment",
 				"description": "Get Deployment",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "InvokeTrainingPipeline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
