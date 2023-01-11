@@ -170,11 +170,6 @@
 				"defaultValue": "supportvectorclassifier"
 			}
 		},
-		"variables": {
-			"test": {
-				"type": "String"
-			}
-		},
 		"annotations": []
 	}
 }
