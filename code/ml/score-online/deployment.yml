@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
-name: batch-deployment-diabetes-blue
+name: batch-deployment-diabetes-green
 description: A deployment using sklaern to predict diabetes.
 endpoint_name: online-endpoint-diabetes
 model: azureml:supportvectorclassifier@latest

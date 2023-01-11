@@ -31,8 +31,145 @@
 					"referenceName": "azureml001",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "CreateOrUpdateDeployment",
+				"description": "Create or update the deployment",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "GetModel",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?api-version=@{pipeline().parameters.apiVersion}",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "PUT",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"body": {
+						"value": "{\n    \"location\": \"@{activity('GetDeployment').output.location}\",\n    \"tags\": @{activity('GetDeployment').output.tags},\n    \"kind\": \"@{activity('GetDeployment').output.kind}\",\n    \"sku\": @{activity('GetDeployment').output.sku},\n    \"properties\": {\n        \"description\": \"@{activity('GetDeployment').output.properties.description}\",\n        \"properties\": @{activity('GetDeployment').output.properties.properties},\n        \"codeConfiguration\": @{activity('GetDeployment').output.properties.codeConfiguration},\n        \"environmentId\": \"@{activity('GetDeployment').output.properties.environmentId}\",\n        \"environmentVariables\": @{activity('GetDeployment').output.properties.environmentVariables},\n        \"scaleSettings\": @{activity('GetDeployment').output.properties.scaleSettings},\n        \"requestSettings\": @{activity('GetDeployment').output.properties.requestSettings},\n        \"modelMountPath\": \"@{activity('GetDeployment').output.properties.modelMountPath}\",\n        \"appInsightsEnabled\": \"@{activity('GetDeployment').output.properties.appInsightsEnabled}\",\n        \"livenessProbe\": @{activity('GetDeployment').output.properties.livenessProbe},\n        \"readinessProbe\": @{activity('GetDeployment').output.properties.readinessProbe},\n        \"instanceType\": \"@{activity('GetDeployment').output.properties.instanceType}\",\n        \"model\": \"@{activity('GetModel').output.value[0].id}\",\n        \"egressPublicNetworkAccess\": \"@{activity('GetDeployment').output.properties.egressPublicNetworkAccess}\",\n        \"endpointComputeType\": \"@{activity('GetDeployment').output.properties.endpointComputeType}\"\n    }\n}",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
+			},
+			{
+				"name": "GetDeployment",
+				"description": "Get Deployment",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "InvokeTrainingPipeline",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/onlineEndpoints/@{pipeline().parameters.endpointName}/deployments/@{pipeline().parameters.deploymentName}?api-version=@{pipeline().parameters.apiVersion}",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
+			},
+			{
+				"name": "GetModel",
+				"description": "Get Model",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "GetDeployment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://management.azure.com@{pipeline().parameters.machineLearningId}/models/@{pipeline().parameters.modelName}/versions?api-version=@{pipeline().parameters.apiVersion}&$orderBy=createdtime desc&$top=1",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"machineLearningId": {
+				"type": "string",
+				"defaultValue": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001"
+			},
+			"apiVersion": {
+				"type": "string",
+				"defaultValue": "2022-10-01"
+			},
+			"endpointName": {
+				"type": "string",
+				"defaultValue": "online-endpoint-diabetes"
+			},
+			"deploymentName": {
+				"type": "string",
+				"defaultValue": "batch-deployment-diabetes-green"
+			},
+			"modelName": {
+				"type": "string",
+				"defaultValue": "supportvectorclassifier"
+			}
+		},
 		"annotations": []
 	}
 }
