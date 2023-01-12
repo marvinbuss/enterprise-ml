@@ -155,6 +155,8 @@ var containerRegistry001Name = '${name}-containerregistry001'
 var storage001Name = '${name}-storage001'
 var machineLearning001Name = '${name}-machinelearning001'
 var logAnalytics001Name = '${name}-loganalytics001'
+var eventGridSystemTopicName = '${name}-egst001'
+var eventGridTopicName = '${name}-egt001'
 
 // Resources
 module userAssignedIdentity001 'modules/services/userassignedidentity.bicep' = {
@@ -331,6 +333,18 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
     privateDnsZoneIdMachineLearningApi: privateDnsZoneIdMachineLearningApi
     privateDnsZoneIdMachineLearningNotebooks: privateDnsZoneIdMachineLearningNotebooks
     enableRoleAssignments: enableRoleAssignments
+  }
+}
+
+module events001 'modules/services/events.bicep' = {
+  name: 'events001'
+  scope: resourceGroup()
+  params: {
+    location: location
+    tags: tags
+    eventGridSystemTopicName: eventGridSystemTopicName
+    eventGridTopicName: eventGridTopicName
+    machineLearningId: machineLearning001.outputs.machineLearningId
   }
 }
 
