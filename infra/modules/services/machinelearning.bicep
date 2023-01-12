@@ -276,53 +276,6 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
   }
 }
 
-resource machineLearningComputeInstance002 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(machineLearningComputeInstance001AdministratorObjectId)) {
-  parent: machineLearning
-  name: 'computeinstance002'
-  dependsOn: [
-    machineLearningPrivateEndpoint
-    machineLearningPrivateEndpointARecord
-  ]
-  location: location
-  tags: tags
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: {
-    computeType: 'ComputeInstance'
-    computeLocation: location
-    description: 'Machine Learning compute instance 002'
-    disableLocalAuth: true
-    properties: {
-      applicationSharingPolicy: 'Personal'
-      computeInstanceAuthorizationType: 'personal'
-      enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
-      #disable-next-line BCP037
-      isolatedNetwork: false
-      personalComputeInstanceSettings: {
-        assignedUser: {
-          objectId: machineLearningComputeInstance002AdministratorObjectId
-          tenantId: subscription().tenantId
-        }
-      }
-      // setupScripts: {
-      //   scripts: {
-      //     creationScript: {}
-      //     startupScript: {}
-      //   }
-      // }
-      sshSettings: {
-        adminPublicKey: machineLearningComputeInstance002AdministratorPublicSshKey
-        sshPublicAccess: empty(machineLearningComputeInstance002AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
-      }
-      subnet: {
-        id: subnetId
-      }
-      vmSize: 'Standard_DS3_v2'
-    }
-  }
-}
-
 // resource machineLearningDefaultBlobStorage 'Microsoft.MachineLearningServices/workspaces/datastores@2022-10-01' = {
 //   parent: machineLearning
 //   name: 'workspaceblobstore'
