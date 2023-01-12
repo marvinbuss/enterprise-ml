@@ -1,0 +1,32 @@
+{
+	"name": "TrainingTriggerDataDrift",
+	"properties": {
+		"description": "Trigger for retraining the model based on data drift.",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Train",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"machineLearningId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001",
+					"apiVersion": "2022-10-01",
+					"endpointName": "online-endpoint-diabetes",
+					"deploymentName": "batch-deployment-diabetes-green",
+					"modelName": "supportvectorclassifier"
+				}
+			}
+		],
+		"type": "CustomEventsTrigger",
+		"typeProperties": {
+			"subjectEndsWith": "",
+			"subjectBeginsWith": "",
+			"scope": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.EventGrid/topics/entml-dev-egt001",
+			"events": [
+				"DataDrift"
+			]
+		}
+	}
+}
