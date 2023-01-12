@@ -39,11 +39,9 @@ resource eventGridTopic 'Microsoft.EventGrid/topics@2022-06-15' = {
     disableLocalAuth: false
     inboundIpRules: []
     inputSchema: 'EventGridSchema'
-    inputSchemaMapping: {
-      inputSchemaMappingType: 'Json'
-    }
     publicNetworkAccess: 'Enabled'
   }
 }
 
 // Outputs
+output eventGridTopicEndpoint string = first(split(eventGridTopic.properties.endpoint, '/api/events'))
