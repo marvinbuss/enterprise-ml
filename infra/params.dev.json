@@ -19,7 +19,7 @@
         },
         "datalakeFileSystemIds": {
             "value": [
-                "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_strg_rg/providers/Microsoft.Storage/storageAccounts/entmldevlake001/blobServices/default/containers/data"
+                "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-storage/providers/Microsoft.Storage/storageAccounts/entmlprdlake001/blobServices/default/containers/data"
             ]
         },
         "aksId": {
@@ -44,7 +44,7 @@
             "value": "abd37d6f-f2bd-40d7-b19e-87d456268400"
         },
         "synapseDefaultStorageAccountFileSystemId": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_strg_rg/providers/Microsoft.Storage/storageAccounts/entmldevlake001/blobServices/default/containers/data"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-storage/providers/Microsoft.Storage/storageAccounts/entmlprdlake001/blobServices/default/containers/data"
         },
         "synapseRepositoryConfiguration": {
             "value": {
@@ -89,49 +89,49 @@
             "value": true
         },
         "subnetId": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/virtualNetworks/entml-dev-vnet/subnets/ServicesSubnet"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-vnet/providers/Microsoft.Network/virtualNetworks/ent-ml-prd-vnet/subnets/App001Subnet"
         },
         "privateDnsZoneIdKeyVault": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
         },
         "privateDnsZoneIdSynapseDev": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.dev.azuresynapse.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.dev.azuresynapse.net"
         },
         "privateDnsZoneIdSynapseSql": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.sql.azuresynapse.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.sql.azuresynapse.net"
         },
         "privateDnsZoneIdDataFactory": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.datafactory.azure.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.datafactory.azure.net"
         },
         "privateDnsZoneIdDataFactoryPortal": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.adf.azure.com"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.adf.azure.com"
         },
         "privateDnsZoneIdCognitiveService": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com"
         },
         "privateDnsZoneIdContainerRegistry": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.azurecr.io"
         },
         "privateDnsZoneIdSearch": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.search.windows.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.search.windows.net"
         },
         "privateDnsZoneIdBlob": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net"
         },
         "privateDnsZoneIdFile": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"
         },
         "privateDnsZoneIdTable": {
-            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.windows.net"
+            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.windows.net"
         },
         "privateDnsZoneIdQueue": {
-            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net"
+            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net"
         },
         "privateDnsZoneIdMachineLearningApi": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.api.azureml.ms"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.api.azureml.ms"
         },
         "privateDnsZoneIdMachineLearningNotebooks": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/e2e_aml_ref_imp_ntwrk_rg/providers/Microsoft.Network/privateDnsZones/privatelink.notebooks.azure.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.notebooks.azure.net"
         }
     }
 }
