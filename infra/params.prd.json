@@ -6,7 +6,7 @@
             "value": "northeurope"
         },
         "environment": {
-            "value": "dev"
+            "value": "prd"
         },
         "prefix": {
             "value": "ent-ml"
