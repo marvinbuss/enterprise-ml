@@ -5,9 +5,7 @@ on:
       - main
     paths:
       - ".github/workflows/**"
-      - "code/MyDotNetCoreSqlProject/**"
-      - "code/MyDotNetSqlProject/**"
-      - "code/Scripts/**"
+      - "code/ml/**"
       - "code/synapseParameters/**"
       - "infra/**"
       - "data-auto-dev-synapse001/**"
@@ -17,9 +15,7 @@ on:
       - main
     paths:
       - ".github/workflows/**"
-      - "code/MyDotNetCoreSqlProject/**"
-      - "code/MyDotNetSqlProject/**"
-      - "code/Scripts/**"
+      - "code/ml/**"
       - "code/synapseParameters/**"
       - "infra/**"
 
