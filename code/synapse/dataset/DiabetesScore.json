@@ -1,0 +1,70 @@
+{
+	"name": "DiabetesScore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake001",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filePath": {
+				"type": "string",
+				"defaultValue": "source"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().filePath",
+					"type": "Expression"
+				},
+				"fileSystem": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "AGE",
+				"type": "INT64"
+			},
+			{
+				"name": "SEX",
+				"type": "INT64"
+			},
+			{
+				"name": "BMI",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "MAP",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "TC",
+				"type": "INT64"
+			},
+			{
+				"name": "LDL",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "HDL",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "TCH",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "LTG",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "GLU",
+				"type": "INT64"
+			}
+		]
+	}
+}

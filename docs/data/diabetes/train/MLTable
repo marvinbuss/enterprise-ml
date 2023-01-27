@@ -1,0 +1,8 @@
+type: mltable
+# traits:
+#   index_columns: ID
+paths:
+  - file: ./diabetes.parquet
+transformations:
+  - read_parquet:
+      include_path_column: false

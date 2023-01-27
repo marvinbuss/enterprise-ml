@@ -1,0 +1,85 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "entml-dev-synapse001"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:entml-dev-synapse001.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"serverless001_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=entml-dev-synapse001-ondemand.sql.azuresynapse.net;Initial Catalog=@{linkedService().databaseName}"
+		},
+		"DiabetesScore_properties_linkedServiceName_reference": {
+			"value": "datalake001"
+		},
+		"DiabetesTraining_properties_linkedServiceName_reference": {
+			"value": "datalake001"
+		},
+		"azureml001_properties_typeProperties_subscriptionId": {
+			"value": "757c4165-0823-49f7-9678-5a85fe5e17cc"
+		},
+		"azureml001_properties_typeProperties_resourceGroupName": {
+			"value": "e2e_aml_ref_imp_ds_rg"
+		},
+		"azureml001_properties_typeProperties_mlWorkspaceName": {
+			"value": "entml-dev-machinelearning001"
+		},
+		"azureml001_properties_typeProperties_authentication": {
+			"value": "MSI"
+		},
+		"datalake001_properties_typeProperties_blobEndpointUri": {
+			"value": "https://entmldevlake001.dfs.core.windows.net/"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultSqlServer_properties_typeProperties_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:entml-dev-synapse001.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"entml-dev-synapse001-WorkspaceDefaultStorage_properties_typeProperties_blobEndpointUri": {
+			"value": "https://entmldevlake001.dfs.core.windows.net"
+		},
+		"keyvault001_properties_typeProperties_baseUrl": {
+			"value": "https://entml-dev-vault001.vault.azure.net/"
+		},
+		"serverless001_properties_typeProperties_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=entml-dev-synapse001-ondemand.sql.azuresynapse.net;Initial Catalog=@{linkedService().databaseName}"
+		},
+		"azureml001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001"
+		},
+		"datalake001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_strg_rg/providers/Microsoft.Storage/storageAccounts/entmldevlake001"
+		},
+		"keyvault001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.KeyVault/vaults/entml-dev-vault001"
+		},
+		"purview001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_gov_rg/providers/Microsoft.Purview/accounts/entml-dev-purview001"
+		},
+		"purview001_blob_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.Storage/storageAccounts/scannortheuropefzavsia"
+		},
+		"purview001_namespace_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.EventHub/namespaces/Atlas-5eac9837-f5f6-42e1-ad90-50f04f0aacfc"
+		},
+		"purview001_queue_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/entml-dev-purview001/providers/Microsoft.Storage/storageAccounts/scannortheuropefzavsia"
+		},
+		"synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.Synapse/workspaces/entml-dev-synapse001"
+		},
+		"synapse-ws-sql--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns": {
+			"value": [
+				"entml-dev-synapse001.4c9f8f04-97cc-4230-949f-c03f01a05d85.sql.azuresynapse.net"
+			]
+		},
+		"synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointPrivateLinkResourceId": {
+			"value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.Synapse/workspaces/entml-dev-synapse001"
+		},
+		"synapse-ws-sqlOnDemand--entml-dev-synapse001_properties_managedPrivateEndpointsFqdns": {
+			"value": [
+				"entml-dev-synapse001-ondemand.4c9f8f04-97cc-4230-949f-c03f01a05d85.sql.azuresynapse.net"
+			]
+		}
+	}
+}

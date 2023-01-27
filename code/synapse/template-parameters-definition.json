@@ -1,0 +1,90 @@
+{
+    "Microsoft.Synapse/workspaces/credentials": {
+        "properties": {
+            "typeProperties": {
+                "resourceId": "=:userManagedIdentityId:string"
+            }
+        }
+    },
+    "Microsoft.Synapse/workspaces/notebooks": {
+        "properties": {
+            "bigDataPool": {
+                "referenceName": "=:bigDataPoolReference:string"
+            }
+        }
+    },
+    "Microsoft.Synapse/workspaces/linkedServices": {
+        "AzureBlobFS": {
+            "properties": {
+                "typeProperties": {
+                    "url": "=:blobEndpointUri:string"
+                }
+            }
+        },
+        "*": {
+            "properties": {
+                "typeProperties": {
+                    "*": "="
+                }
+            }
+        }
+    },
+    "Microsoft.Synapse/workspaces/databases": {
+        "properties": {
+            "Ddls": [
+                {
+                    "Source": {
+                        "Location": "=:databaseLocationUri:string",
+                        "Properties": {
+                            "LinkedServiceName": "=:linkedServiceName:string"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "Microsoft.Synapse/workspaces/datasets": {
+        "SqlPoolTable": {
+            "properties": {
+                "sqlPool": {
+                    "referenceName": "=:sqlPoolReference:string"
+                }
+            }
+        },
+        "*": {
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "=:reference:string"
+                }
+            }
+        }
+    },
+    "Microsoft.Synapse/workspaces/pipelines": {
+        "properties": {
+            "activities": [
+                {
+                    "typeProperties": {
+                        "sparkPool": {
+                            "referenceName": "=:bigDataPoolReference:string"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "Microsoft.Synapse/workspaces/sqlscripts": {
+        "properties": {
+            "content": {
+                "currentConnection": {
+                    "*": "="
+                }
+            }
+        }
+    },
+    "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints": {
+        "properties": {
+            "privateLinkResourceId": "=:managedPrivateEndpointPrivateLinkResourceId:string",
+            "fqdns": "=:managedPrivateEndpointsFqdns:array"
+        }
+    }
+}

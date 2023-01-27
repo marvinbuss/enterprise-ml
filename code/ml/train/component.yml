@@ -2,20 +2,53 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 type: command
 name: train
 display_name: Train
-version: 1
+description: Training step of the ml pipeline.
+version: 3
+resources:
+    instance_count: 1
 
 code: .
+is_deterministic: false
 inputs:
   tracking_uri:
+    description: Specifies the tracking url for mlflow.
     type: string
+    default: azureml://northeurope.api.azureml.ms/mlflow/v1.0/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001
+    optional: false
   experiment_name:
+    description: Specifies the name of the experiment.
     type: string
+    optional: false
+  svr_kernel:
+    description: Specifies the size of the test dataset in percent.
+    type: string
+    optional: true
+    enum:
+      - "linear"
+      - "poly"
+      - "rbf"
+      - "sigmoid"
+      - "precomputed"
+    default: "rbf"
+  svr_degree:
+    description: Specifies the degree for the support vector regression.
+    type: integer
+    optional: true
+    default: 3
+    min: 0
+  target_column_name:
+    description: Specifies the name of the target column for the regression problem.
+    type: string
+    optional: false
   input_data:
-    type: uri_folder
+    description: Specifies the input dataset.
+    type: mltable
     mode: ro_mount
+    optional: false
 outputs:
   output_data:
-    type: uri_folder
+    description: Specifies the best model.
+    type: mlflow_model
 environment:
   conda_file: ./conda.yml
   image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:20220314.v1
@@ -23,3 +56,8 @@ command: >-
   python main.py
   --tracking-uri ${{inputs.tracking_uri}}
   --experiment-name ${{inputs.experiment_name}}
+  $[[--svr-kernel ${{inputs.svr_kernel}}]]
+  $[[--svr-degree ${{inputs.svr_degree}}]]
+  --target-column-name ${{inputs.target_column_name}}
+  --input-data ${{inputs.input_data}}
+  --output-data ${{outputs.output_data}}
