@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchEndpoint.schema.json
+name: batch-endpoint-diabetes
+description: A batch endpoint for scoring diabetes data.
+auth_mode: aad_token
+defaults:
+    deployment_name: batch-deployment-diabetes

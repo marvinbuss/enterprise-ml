@@ -23,13 +23,20 @@ param storageSkuName string = 'Standard_LRS'
 param storageContainerNames array = [
   'default'
 ]
+param fileShareNames array = [
+  'azureml-filestore'
+]
 param privateDnsZoneIdBlob string = ''
 param privateDnsZoneIdFile string = ''
+param privateDnsZoneIdTable string = ''
+param privateDnsZoneIdQueue string = ''
 
 // Variables
 var storageNameCleaned = replace(storageName, '-', '')
 var storagePrivateEndpointNameBlob = '${storage.name}-blob-pe'
 var storagePrivateEndpointNameFile = '${storage.name}-file-pe'
+var storagePrivateEndpointNameTable = '${storage.name}-table-pe'
+var storagePrivateEndpointNameQueue = '${storage.name}-queue-pe'
 
 // Resources
 resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
@@ -91,7 +98,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     largeFileSharesState: 'Disabled'
     minimumTlsVersion: 'TLS1_2'
     networkAcls: {
-      bypass: 'Metrics'
+      bypass: 'Metrics, AzureServices'
       defaultAction: 'Deny'
       ipRules: []
       virtualNetworkRules: []
@@ -219,6 +226,35 @@ resource storageContainers 'Microsoft.Storage/storageAccounts/blobServices/conta
   }
 }]
 
+resource storageFileServices 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+  parent: storage
+  name: 'default'
+  properties: {
+    cors: {
+      corsRules: []
+    }
+    // protocolSettings: {
+    //   smb: {}
+    // }
+    shareDeleteRetentionPolicy: {
+      enabled: true
+      days: 7
+      // allowPermanentDelete: false
+    }
+  }
+}
+
+resource storageFileShares 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = [for fileShareName in fileShareNames: {
+  parent: storageFileServices
+  name: fileShareName
+  properties: {
+    accessTier: 'TransactionOptimized'
+    enabledProtocols: 'SMB'
+    metadata: {}
+    shareQuota: 5120
+  }
+}]
+
 resource storagePrivateEndpointBlob 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   name: storagePrivateEndpointNameBlob
   location: location
@@ -297,6 +333,90 @@ resource storagePrivateEndpointFileARecord 'Microsoft.Network/privateEndpoints/p
         name: '${storagePrivateEndpointFile.name}-arecord'
         properties: {
           privateDnsZoneId: privateDnsZoneIdFile
+        }
+      }
+    ]
+  }
+}
+
+resource storagePrivateEndpointTable 'Microsoft.Network/privateEndpoints@2022-07-01' = {
+  name: storagePrivateEndpointNameTable
+  location: location
+  tags: tags
+  properties: {
+    applicationSecurityGroups: []
+    customDnsConfigs: []
+    customNetworkInterfaceName: '${storagePrivateEndpointNameTable}-nic'
+    manualPrivateLinkServiceConnections: []
+    privateLinkServiceConnections: [
+      {
+        name: storagePrivateEndpointNameTable
+        properties: {
+          groupIds: [
+            'table'
+          ]
+          privateLinkServiceId: storage.id
+          requestMessage: ''
+        }
+      }
+    ]
+    subnet: {
+      id: subnetId
+    }
+  }
+}
+
+resource storagePrivateEndpointNameTableARecord 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-07-01' = if (!empty(privateDnsZoneIdTable)) {
+  parent: storagePrivateEndpointTable
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: '${storagePrivateEndpointTable.name}-arecord'
+        properties: {
+          privateDnsZoneId: privateDnsZoneIdTable
+        }
+      }
+    ]
+  }
+}
+
+resource storagePrivateEndpointQueue 'Microsoft.Network/privateEndpoints@2022-07-01' = {
+  name: storagePrivateEndpointNameQueue
+  location: location
+  tags: tags
+  properties: {
+    applicationSecurityGroups: []
+    customDnsConfigs: []
+    customNetworkInterfaceName: '${storagePrivateEndpointNameQueue}-nic'
+    manualPrivateLinkServiceConnections: []
+    privateLinkServiceConnections: [
+      {
+        name: storagePrivateEndpointNameQueue
+        properties: {
+          groupIds: [
+            'queue'
+          ]
+          privateLinkServiceId: storage.id
+          requestMessage: ''
+        }
+      }
+    ]
+    subnet: {
+      id: subnetId
+    }
+  }
+}
+
+resource storagePrivateEndpointQueueARecord 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-07-01' = if (!empty(privateDnsZoneIdQueue)) {
+  parent: storagePrivateEndpointQueue
+  name: 'default'
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: '${storagePrivateEndpointQueue.name}-arecord'
+        properties: {
+          privateDnsZoneId: privateDnsZoneIdQueue
         }
       }
     ]
