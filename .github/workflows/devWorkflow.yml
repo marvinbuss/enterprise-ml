@@ -64,4 +64,3 @@ jobs:
     secrets:
       TENANT_ID: ${{ secrets.TENANT_ID }}
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      TEAMS_WEBHOOK_URI: ${{ secrets.TEAMS_WEBHOOK_URI }}
