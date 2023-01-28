@@ -1,7 +1,11 @@
 {
 	"name": "azureml001",
 	"properties": {
-		"privateLinkResourceId": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/e2e_aml_ref_imp_ds_rg/providers/Microsoft.MachineLearningServices/workspaces/entml-dev-machinelearning001",
-		"groupId": "amlworkspace"
+		"privateLinkResourceId": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-dev-app001/providers/Microsoft.MachineLearningServices/workspaces/ent-ml-dev-machinelearning001",
+		"groupId": "amlworkspace",
+		"fqdns": [
+			"3bc3e65b-4217-4896-b57e-114e442885bb.workspace.northeurope.api.azureml.ms",
+			"3bc3e65b-4217-4896-b57e-114e442885bb.workspace.northeurope.cert.api.azureml.ms"
+		]
 	}
 }

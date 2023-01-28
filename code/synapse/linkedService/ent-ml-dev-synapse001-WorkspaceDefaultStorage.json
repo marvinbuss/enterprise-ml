@@ -1,9 +1,9 @@
 {
-	"name": "entml-dev-synapse001-WorkspaceDefaultStorage",
+	"name": "ent-ml-dev-synapse001-WorkspaceDefaultStorage",
 	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"typeProperties": {
-			"url": "https://entmldevlake001.dfs.core.windows.net"
+			"url": "https://entmlprdlake001.dfs.core.windows.net"
 		},
 		"type": "AzureBlobFS",
 		"connectVia": {
