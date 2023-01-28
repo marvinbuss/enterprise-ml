@@ -128,10 +128,8 @@ jobs:
           az ml model create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
-            --name "supportvectorclassifier" \
             --file ${{ github.workspace }}/code/ml/model/model.yml \
-            --path ${{ github.workspace }}/model \
-            --tags "source_job=${{ inputs.job_name }},source_output=${{ inputs.output_name }}"
+            --tags source_job=${{ inputs.job_name }} source_output=${{ inputs.output_name }}
 
       # Log out from Azure
       - name: Log out from Azure
