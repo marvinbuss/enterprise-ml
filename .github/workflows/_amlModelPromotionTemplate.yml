@@ -71,7 +71,9 @@ jobs:
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --name ${{ inputs.job_name }} \
             --output-name ${{ inputs.output_name }} \
-            --download-path ${{ github.workspace }}/model/
+            --download-path ${{ github.workspace }}/download/
+          
+          cp -avr "${{ github.workspace }}/download/named-outputs/${{ inputs.output_name }}/*" "./model"
 
       # Create Artifact
       - name: Create Artifact
