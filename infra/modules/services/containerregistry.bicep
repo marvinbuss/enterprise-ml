@@ -27,7 +27,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
     name: 'Premium'
   }
   properties: {
-    adminUserEnabled: true
+    adminUserEnabled: false
     anonymousPullEnabled: false
     dataEndpointEnabled: false
     networkRuleBypassOptions: 'AzureServices'
