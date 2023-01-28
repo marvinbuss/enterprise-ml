@@ -29,19 +29,19 @@
             "value": ""
         },
         "machineLearningComputeInstance001AdministratorObjectId": {
-            "value": "5515fcb5-5829-44c8-99a0-f787768e8867"
+            "value": "1f216ad9-c16f-4557-8278-360d317302ec"
         },
         "machineLearningComputeInstance001AdministratorPublicSshKey": {
             "value": ""
         },
         "machineLearningComputeInstance002AdministratorObjectId": {
-            "value": "abd37d6f-f2bd-40d7-b19e-87d456268400"
+            "value": ""
         },
         "machineLearningComputeInstance002AdministratorPublicSshKey": {
             "value": ""
         },
         "administratorObjectId": {
-            "value": "abd37d6f-f2bd-40d7-b19e-87d456268400"
+            "value": "1f216ad9-c16f-4557-8278-360d317302ec"
         },
         "synapseDefaultStorageAccountFileSystemId": {
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-storage/providers/Microsoft.Storage/storageAccounts/entmlprdlake001/blobServices/default/containers/data"
