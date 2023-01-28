@@ -41,7 +41,7 @@ jobs:
         with:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ inputs.azure_subscription_id }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       # Deploy Template
       - name: Deploy Template
@@ -49,7 +49,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           scope: resourcegroup
-          subscriptionId: ${{ inputs.azure_subscription_id }}
+          subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
           region: ${{ vars.AZURE_LOCATION }}
           template: ${{ github.workspace }}/infra/main.bicep
