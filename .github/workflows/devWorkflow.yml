@@ -51,6 +51,17 @@ jobs:
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
       TEAMS_WEBHOOK_URI: ${{ secrets.TEAMS_WEBHOOK_URI }}
 
+  aml_deploy_dev:
+    uses: ./.github/workflows/_amlDeployTemplate.yml
+    name: "Azure ML Deploy - Dev"
+    needs: [aml_training_dev]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    with:
+      environment: "dev"
+    secrets:
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+
   aml_model_promotion_dev_to_prd:
     uses: ./.github/workflows/_amlModelPromotionTemplate.yml
     name: "Azure ML Model Promotion - Dev to Prod"
