@@ -9,10 +9,10 @@ on:
         default: "dev"
         description: "Specifies the environment of the deployment."
     secrets:
-      tenant_id:
+      TENANT_ID:
         required: true
         description: "Specifies the tenant id of the deployment."
-      client_id:
+      CLIENT_ID:
         required: true
         description: "Specifies the client id."
 
@@ -39,8 +39,8 @@ jobs:
         id: azure_login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.client_id }}
-          tenant-id: ${{ secrets.tenant_id }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ inputs.azure_subscription_id }}
 
       # Deploy Template

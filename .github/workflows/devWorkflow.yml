@@ -25,8 +25,8 @@ jobs:
     with:
       environment: "dev"
     secrets:
-      tenant_id: ${{ secrets.TENANT_ID }}
-      client_id: ${{ secrets.CLIENT_ID }}
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
 
   infra_deployment_dev:
     uses: ./.github/workflows/_infraDeploymentTemplate.yml
@@ -36,5 +36,5 @@ jobs:
     with:
       environment: "dev"
     secrets:
-      tenant_id: ${{ secrets.TENANT_ID }}
-      client_id: ${{ secrets.CLIENT_ID }}
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
