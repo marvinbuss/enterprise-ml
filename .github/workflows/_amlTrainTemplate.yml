@@ -73,7 +73,10 @@ jobs:
             --file ${{ github.workspace }}/code/ml/pipeline-train.yml \
             --stream
 
+          STUDIO_URL=$(az ml job show --name "train001" --workspace-name "ent-ml-dev-machinelearning001" --resource-group "ent-ml-dev-app001" --query services.Studio.endpoint)
+
           echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
+          echo "studio_url=$STUDIO_URL" >> $GITHUB_OUTPUT
         env:
           JOB_NAME: "Job-${{ github.sha }}"
 
@@ -84,7 +87,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URI }}
-          notification-summary: New model has been trained. Please review and approve promotion to production
+          notification-summary: New model has been trained. Promotion approval required. Please review here ${{ steps.aml_job.outputs.studio_url }}
           notification-color: 17a2b8
           timezone: UTC
 
