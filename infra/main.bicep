@@ -65,8 +65,6 @@ param databricksWorkspaceUrl string = ''
 @secure()
 @description('Specifies the access token of the Databricks workspace that will be connected to the Machine Learning Workspace. If you do not want to connect Databricks to Machine Learning, leave this value empty as is.')
 param databricksAccessToken string = ''
-@description('Specifies whether role assignments should be enabled for Synapse (Blob Storage Contributor to default storage account).')
-param enableRoleAssignments bool = false
 @allowed([
   'AnomalyDetector'
   'ComputerVision'
@@ -152,7 +150,7 @@ var cognitiveservicesName = '${name}-cognitiveservice'
 var search001Name = '${name}-search001'
 var applicationInsights001Name = '${name}-insights001'
 var containerRegistry001Name = '${name}-containerregistry001'
-var storage001Name = '${name}-storage001'
+var storage001Name = '${name}-stg001'
 var machineLearning001Name = '${name}-machinelearning001'
 var logAnalytics001Name = '${name}-loganalytics001'
 var eventGridSystemTopic001Name = '${name}-egst001'
@@ -201,6 +199,7 @@ module synapse001 'modules/services/synapse.bicep' = if (processingService == 's
     enableSqlPool: enableSqlPool
     synapseComputeSubnetId: ''
     synapseDefaultStorageAccountFileSystemId: synapseDefaultStorageAccountFileSystemId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
   }
 }
 
@@ -219,6 +218,7 @@ module datafactory001 'modules/services/datafactory.bicep' = if (processingServi
     purviewManagedStorageId: purviewManagedStorageId
     purviewManagedEventHubId: purviewManagedEventHubId
     machineLearning001Id: machineLearning001.outputs.machineLearningId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
   }
 }
 
@@ -249,6 +249,7 @@ module search001 'modules/services/search.bicep' = if (enableSearch) {
     searchReplicaCount: 1
     searchSkuName: 'standard'
     privateDnsZoneIdSearch: privateDnsZoneIdSearch
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
   }
 }
 
@@ -311,6 +312,14 @@ module storage001 'modules/services/storage.bicep' = {
 module machineLearning001 'modules/services/machinelearning.bicep' = {
   name: 'machineLearning001'
   scope: resourceGroup()
+  dependsOn: [
+    userAssignedIdentity001RoleAssignmentApplicationInsights
+    userAssignedIdentity001RoleAssignmentContainerRegistry
+    userAssignedIdentity001RoleAssignmentKeyVaultAdmin
+    userAssignedIdentity001RoleAssignmentKeyVaultContributor
+    userAssignedIdentity001RoleAssignmentStorageBlobContributor
+    userAssignedIdentity001RoleAssignmentStorageContributor
+  ]
   params: {
     location: location
     tags: tagsJoined
@@ -333,7 +342,7 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
     machineLearningComputeInstance002AdministratorPublicSshKey: machineLearningComputeInstance002AdministratorPublicSshKey
     privateDnsZoneIdMachineLearningApi: privateDnsZoneIdMachineLearningApi
     privateDnsZoneIdMachineLearningNotebooks: privateDnsZoneIdMachineLearningNotebooks
-    enableRoleAssignments: enableRoleAssignments
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
   }
 }
 
@@ -362,27 +371,87 @@ module logicApp001 'modules/services/logicapp.bicep' = {
 }
 
 // Role assignments
-module machineLearning001RoleAssignmentContainerRegistry 'modules/auxiliary/machineLearningRoleAssignmentContainerRegistry.bicep' = if (!empty(externalContainerRegistryId) && enableRoleAssignments) {
-  name: 'machineLearning001RoleAssignmentContainerRegistry'
+module userAssignedIdentity001RoleAssignmentExternalContainerRegistry 'modules/auxiliary/uaiRoleAssignmentContainerRegistry.bicep' = if (!empty(externalContainerRegistryId)) {
+  name: 'userAssignedIdentity001RoleAssignmentExternalContainerRegistry'
   scope: resourceGroup(externalContainerRegistrySubscriptionId, externalContainerRegistryResourceGroupName)
   params: {
     containerRegistryId: externalContainerRegistryId
-    machineLearningId: machineLearning001.outputs.machineLearningId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
     role: 'AcrPull'
   }
 }
 
-module machineLearning001RoleAssignmentStorage 'modules/auxiliary/machineLearningRoleAssignmentStorage.bicep' = [for (datalakeFileSystemId, i) in datalakeFileSystemIds: if (enableRoleAssignments) {
-  name: 'machineLearning001RoleAssignmentStorage-${i}'
+module userAssignedIdentity001RoleAssignmentContainerRegistry 'modules/auxiliary/uaiRoleAssignmentContainerRegistry.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentContainerRegistry'
+  scope: resourceGroup()
+  params: {
+    containerRegistryId: containerRegistry001.outputs.containerRegistryId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'Contributor'
+  }
+}
+
+module userAssignedIdentity001RoleAssignmentStorageContributor 'modules/auxiliary/uaiRoleAssignmentStorage.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentStorageContributor'
+  scope: resourceGroup()
+  params: {
+    storageAccountId: storage001.outputs.storageId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'Contributor'
+  }
+}
+
+module userAssignedIdentity001RoleAssignmentStorageBlobContributor 'modules/auxiliary/uaiRoleAssignmentStorage.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentStorageBlobContributor'
+  scope: resourceGroup()
+  params: {
+    storageAccountId: storage001.outputs.storageId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'StorageBlobDataContributor'
+  }
+}
+
+module userAssignedIdentity001RoleAssignmentDatalake 'modules/auxiliary/uaiRoleAssignmentDatalake.bicep' = [for (datalakeFileSystemId, i) in datalakeFileSystemIds: {
+  name: 'userAssignedIdentity001RoleAssignmentDatalake-${i}'
   scope: resourceGroup(length(datalakeFileSystemIds) <= 0 ? subscription().subscriptionId : datalakeFileSystemScopes[i].subscriptionId, length(datalakeFileSystemIds) <= 0 ? resourceGroup().name : datalakeFileSystemScopes[i].resourceGroupName)
   params: {
-    machineLearningId: machineLearning001.outputs.machineLearningId
     storageAccountFileSystemId: datalakeFileSystemId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
     role: 'StorageBlobDataContributor'
   }
 }]
 
-module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentStorage.bicep' = if (processingService == 'synapse' && enableRoleAssignments) {
+module userAssignedIdentity001RoleAssignmentKeyVaultContributor 'modules/auxiliary/uaiRoleAssignmentKeyVault.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentKeyVaultContributor'
+  scope: resourceGroup()
+  params: {
+    keyVaultId: keyVault001.outputs.keyvaultId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'Contributor'
+  }
+}
+
+module userAssignedIdentity001RoleAssignmentKeyVaultAdmin 'modules/auxiliary/uaiRoleAssignmentKeyVault.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentKeyVaultAdmin'
+  scope: resourceGroup()
+  params: {
+    keyVaultId: keyVault001.outputs.keyvaultId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'KeyVaultAdministrator'
+  }
+}
+
+module userAssignedIdentity001RoleAssignmentApplicationInsights 'modules/auxiliary/uaiRoleAssignmentApplicationInsights.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentApplicationInsights'
+  scope: resourceGroup()
+  params: {
+    applicationInsightsId: applicationInsights001.outputs.applicationInsightsId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'Contributor'
+  }
+}
+
+module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentStorage.bicep' = if (processingService == 'synapse') {
   name: 'synapse001RoleAssignmentStorage'
   scope: resourceGroup(synapseDefaultStorageAccountSubscriptionId, synapseDefaultStorageAccountResourceGroupName)
   params: {
@@ -392,7 +461,7 @@ module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentS
   }
 }
 
-module synapse001RoleAssignmentmachineLearning 'modules/auxiliary/synapseRoleAssignmentMachineLearning.bicep' = if (processingService == 'synapse' && enableRoleAssignments) {
+module synapse001RoleAssignmentmachineLearning 'modules/auxiliary/synapseRoleAssignmentMachineLearning.bicep' = if (processingService == 'synapse') {
   name: 'synapse001RoleAssignmentmachineLearning'
   scope: resourceGroup()
   params: {

@@ -29,7 +29,7 @@ param machineLearningComputeInstance002AdministratorObjectId string = ''
 param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
 param privateDnsZoneIdMachineLearningApi string = ''
 param privateDnsZoneIdMachineLearningNotebooks string = ''
-param enableRoleAssignments bool = false
+param userAssignedIdentityId string
 
 // Variables
 var machineLearningPrivateEndpointName = '${machineLearning.name}-pe'
@@ -65,7 +65,10 @@ resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-0
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     allowPublicAccessWhenBehindVnet: true
@@ -77,7 +80,7 @@ resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-0
     friendlyName: machineLearningName
     hbiWorkspace: true
     imageBuildCompute: containerBuildComputeName
-    primaryUserAssignedIdentity: ''
+    primaryUserAssignedIdentity: userAssignedIdentityId
     publicNetworkAccess: 'Enabled'
     // serviceManagedResourcesSettings: {
     //   cosmosDb: {
@@ -98,7 +101,10 @@ resource machineLearningKubernetes001 'Microsoft.MachineLearningServices/workspa
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     computeType: 'AKS'
@@ -106,7 +112,7 @@ resource machineLearningKubernetes001 'Microsoft.MachineLearningServices/workspa
   }
 }
 
-resource machineLearningDatabricks001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (enableRoleAssignments && !empty(databricksWorkspaceId) && !empty(databricksWorkspaceUrl) && !empty(databricksAccessToken)) {
+resource machineLearningDatabricks001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(databricksWorkspaceId) && !empty(databricksWorkspaceUrl) && !empty(databricksAccessToken)) {
   parent: machineLearning
   name: 'databricks001'
   location: location
@@ -124,7 +130,7 @@ resource machineLearningDatabricks001 'Microsoft.MachineLearningServices/workspa
   }
 }
 
-resource machineLearningSynapse001 'Microsoft.MachineLearningServices/workspaces/linkedServices@2020-09-01-preview' = if (enableRoleAssignments && !empty(synapseId)) {
+resource machineLearningSynapse001 'Microsoft.MachineLearningServices/workspaces/linkedServices@2020-09-01-preview' = if (!empty(synapseId)) {
   parent: machineLearning
   name: 'synapse001'
   location: location
@@ -137,7 +143,7 @@ resource machineLearningSynapse001 'Microsoft.MachineLearningServices/workspaces
   }
 }
 
-resource machineLearningSynapse001BigDataPool001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (enableRoleAssignments && !empty(synapseId) && !empty(synapseBigDataPoolId)) {
+resource machineLearningSynapse001BigDataPool001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(synapseId) && !empty(synapseBigDataPoolId)) {
   parent: machineLearning
   name: 'bigdatapool001'
   location: location
@@ -167,7 +173,10 @@ resource machineLearningCpuCluster001 'Microsoft.MachineLearningServices/workspa
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     computeType: 'AmlCompute'
@@ -203,7 +212,10 @@ resource machineLearningGpuCluster001 'Microsoft.MachineLearningServices/workspa
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     computeType: 'AmlCompute'
@@ -239,7 +251,10 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     computeType: 'ComputeInstance'
@@ -267,6 +282,56 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
       sshSettings: {
         adminPublicKey: machineLearningComputeInstance001AdministratorPublicSshKey
         sshPublicAccess: empty(machineLearningComputeInstance001AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
+      }
+      subnet: {
+        id: subnetId
+      }
+      vmSize: 'Standard_DS3_v2'
+    }
+  }
+}
+
+resource machineLearningComputeInstance003 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = if (!empty(machineLearningComputeInstance002AdministratorObjectId)) {
+  parent: machineLearning
+  name: 'computeinstance003'
+  dependsOn: [
+    machineLearningPrivateEndpoint
+    machineLearningPrivateEndpointARecord
+  ]
+  location: location
+  tags: tags
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
+  }
+  properties: {
+    computeType: 'ComputeInstance'
+    computeLocation: location
+    description: 'Machine Learning compute instance 002'
+    disableLocalAuth: true
+    properties: {
+      applicationSharingPolicy: 'Personal'
+      computeInstanceAuthorizationType: 'personal'
+      enableNodePublicIp: contains(noPublicIpRegions, location) ? false : true
+      #disable-next-line BCP037
+      isolatedNetwork: false
+      personalComputeInstanceSettings: {
+        assignedUser: {
+          objectId: machineLearningComputeInstance002AdministratorObjectId
+          tenantId: subscription().tenantId
+        }
+      }
+      // setupScripts: {
+      //   scripts: {
+      //     creationScript: {}
+      //     startupScript: {}
+      //   }
+      // }
+      sshSettings: {
+        adminPublicKey: machineLearningComputeInstance002AdministratorPublicSshKey
+        sshPublicAccess: empty(machineLearningComputeInstance002AdministratorPublicSshKey) ? 'Disabled' : 'Enabled'
       }
       subnet: {
         id: subnetId

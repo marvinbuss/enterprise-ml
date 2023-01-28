@@ -1,0 +1,81 @@
+name: Infra Validation Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+    secrets:
+      TENANT_ID:
+        required: true
+        description: "Specifies the tenant id of the deployment."
+      CLIENT_ID:
+        required: true
+        description: "Specifies the client id."
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy Model in ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v3
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Create Online Endpoint
+      - name: Create Online Endpoint
+        id: aml_online_endpoint
+        run: |
+          az ml online-endpoint update \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --file ${{ github.workspace }}/code/ml/score-online/endpoint.yml
+
+      # Create Online Deployment
+      - name: Create Online Deployment
+        id: aml_online_deployment
+        run: |
+          az ml online-deployment update \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name "Job-${{ github.sha }}" \
+            --file ${{ github.workspace }}/code/ml/score-online/deployment.yml
+
+      # Invoke Online Deployment
+      - name: Invoke Online Deployment
+        id: aml_online_deployment_invoke
+        run: |
+          az ml online-deployment invoke \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name "online-endpoint-diabetes" \
+            --request-file ${{ github.workspace }}/code/ml/score-online/sample-request.json
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout

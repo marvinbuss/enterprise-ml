@@ -9,24 +9,16 @@ on:
         default: "dev"
         description: "Specifies the environment of the deployment."
     secrets:
-      azure_subscription_id:
-        required: true
-        description: "Specifies the subscription id of the deployment."
-      azure_resource_group_name:
-        required: true
-        description: "Specifies the name of the resource group for the deployment."
-      azure_location_name:
-        required: true
-        description: "Specifies the location name of the deployment."
-      tenant_id:
+      TENANT_ID:
         required: true
         description: "Specifies the tenant id of the deployment."
-      client_id:
+      CLIENT_ID:
         required: true
         description: "Specifies the client id."
-      client_secret:
-        required: true
-        description: "Specifies the client secret."
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   deployment:
@@ -47,7 +39,9 @@ jobs:
         id: azure_login
         uses: azure/login@v1
         with:
-          creds: '{"clientId":"${{ secrets.client_id }}","clientSecret":"${{ secrets.client_secret }}","subscriptionId":"${{ secrets.azure_subscription_id }}","tenantId":"${{ secrets.tenant_id }}"}'
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       # Deploy Template
       - name: Deploy Template
@@ -55,9 +49,9 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           scope: resourcegroup
-          subscriptionId: ${{ secrets.azure_subscription_id }}
-          resourceGroupName: ${{ secrets.azure_resource_group_name }}
-          region: ${{ secrets.azure_location_name }}
+          subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          region: ${{ vars.AZURE_LOCATION }}
           template: ${{ github.workspace }}/infra/main.bicep
           parameters: ${{ github.workspace }}/infra/params.${{ inputs.environment }}.json
           deploymentMode: Incremental

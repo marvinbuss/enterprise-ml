@@ -9,9 +9,13 @@ param prefix string
 param tags object
 param vnetAddressPrefix string = '10.0.0.0/24'
 param servicesSubnetAddressPrefix string = '10.0.0.0/27'
+param appSubnet001AddressPrefix string = '10.0.0.64/26'
+param appSubnet002AddressPrefix string = '10.0.0.128/26'
 
 // Variables
 var servicesSubnetName = 'ServicesSubnet'
+var appSubnet001Name = 'App001Subnet'
+var appSubnet002Name = 'App002Subnet'
 var routeTableName = '${prefix}-routetable'
 var publicIpName = '${prefix}-pip'
 var natGatewayName = '${prefix}-nat'
@@ -213,6 +217,48 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
         name: servicesSubnetName
         properties: {
           addressPrefix: servicesSubnetAddressPrefix
+          addressPrefixes: []
+          natGateway: {
+            id: natGateway.id
+          }
+          networkSecurityGroup: {
+            id: nsg.id
+          }
+          routeTable: {
+            id: routeTable.id
+          }
+          delegations: []
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Disabled'
+          serviceEndpointPolicies: []
+          serviceEndpoints: []
+        }
+      }
+      {
+        name: appSubnet001Name
+        properties: {
+          addressPrefix: appSubnet001AddressPrefix
+          addressPrefixes: []
+          natGateway: {
+            id: natGateway.id
+          }
+          networkSecurityGroup: {
+            id: nsg.id
+          }
+          routeTable: {
+            id: routeTable.id
+          }
+          delegations: []
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Disabled'
+          serviceEndpointPolicies: []
+          serviceEndpoints: []
+        }
+      }
+      {
+        name: appSubnet002Name
+        properties: {
+          addressPrefix: appSubnet002AddressPrefix
           addressPrefixes: []
           natGateway: {
             id: natGateway.id

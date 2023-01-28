@@ -1,0 +1,135 @@
+name: Infra Validation Template
+
+on:
+  workflow_call:
+    inputs:
+      environment_source:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the source environment."
+      environment_destination:
+        required: true
+        type: string
+        default: "prd"
+        description: "Specifies the destination environment."
+      job_name:
+        required: true
+        type: string
+        description: "Specifies the name of the job."
+      output_name:
+        required: false
+        type: string
+        default: best_model
+        description: "Specifies the name of the job output."
+    secrets:
+      TENANT_ID:
+        required: true
+        description: "Specifies the tenant id of the deployment."
+      CLIENT_ID:
+        required: true
+        description: "Specifies the client id."
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  model_download:
+    name: Download model from ${{ inputs.environment_source }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment_source }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v3
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Download Model
+      - name: Download Model
+        id: aml_model_download
+        run: |
+          az ml job download \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name ${{ inputs.job_name }} \
+            --output-name ${{ inputs.output_name }} \
+            --download-path ${{ github.workspace }}/model/
+
+      # Create Artifact
+      - name: Create Artifact
+        id: artifact_create
+        uses: actions/upload-artifact@v3
+        with:
+          name: model
+          path: ${{ github.workspace }}/model/
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout
+
+  model_upload:
+    name: Upload model to ${{ inputs.environment_destination }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment_destination }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v3
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Download Artifact
+      - name: Download ARtifact
+        id: artifact_download
+        uses: actions/download-artifact@v3
+        with:
+          name: model
+          path: ${{ github.workspace }}/model/
+
+      # Register Model
+      - name: Register Model
+        id: aml_model_register
+        run: |
+          az ml model create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name "supportvectorclassifier" \
+            --file ${{ github.workspace }}/code/ml/model/model.yml \
+            --path ${{ github.workspace }}/model \
+            --tags "source_job=${{ inputs.job_name }},source_output=${{ inputs.output_name }}"
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout

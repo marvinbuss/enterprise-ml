@@ -38,4 +38,5 @@ jobs:
           VALIDATE_GITHUB_ACTIONS: false
           VALIDATE_PYTHON_FLAKE8: false
           VALIDATE_PYTHON_MYPY: false
+          VALIDATE_GITLEAKS: false
           FILTER_REGEX_EXCLUDE: (/.devcontainer/|/reference/)

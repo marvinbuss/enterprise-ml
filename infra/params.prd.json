@@ -6,7 +6,7 @@
             "value": "northeurope"
         },
         "environment": {
-            "value": "dev"
+            "value": "prd"
         },
         "prefix": {
             "value": "ent-ml"
@@ -29,7 +29,7 @@
             "value": ""
         },
         "machineLearningComputeInstance001AdministratorObjectId": {
-            "value": "1f216ad9-c16f-4557-8278-360d317302ec"
+            "value": ""
         },
         "machineLearningComputeInstance001AdministratorPublicSshKey": {
             "value": ""
@@ -47,13 +47,7 @@
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-storage/providers/Microsoft.Storage/storageAccounts/entmlprdlake001/blobServices/default/containers/data"
         },
         "synapseRepositoryConfiguration": {
-            "value": {
-                "type": "WorkspaceGitHubConfiguration",
-                "accountName": "marvinbuss",
-                "repositoryName": "enterprise-ml",
-                "collaborationBranch": "main",
-                "rootFolder": "/code/synapse"
-            }
+            "value": {}
         },
         "enableSqlPool": {
             "value": false
@@ -86,7 +80,7 @@
             "value": true
         },
         "subnetId": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-network/providers/Microsoft.Network/virtualNetworks/ent-ml-prd-vnet/subnets/App001Subnet"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-network/providers/Microsoft.Network/virtualNetworks/ent-ml-prd-vnet/subnets/App002Subnet"
         },
         "privateDnsZoneIdKeyVault": {
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"

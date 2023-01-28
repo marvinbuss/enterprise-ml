@@ -16,6 +16,7 @@ param privateDnsZoneIdDataFactoryPortal string = ''
 param purviewId string = ''
 param purviewManagedStorageId string = ''
 param purviewManagedEventHubId string = ''
+param userAssignedIdentityId string
 
 // Variables
 var keyVault001Name = length(split(keyVault001Id, '/')) == 9 ? last(split(keyVault001Id, '/')) : 'incorrectSegmentLength'
@@ -32,7 +33,10 @@ resource datafactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     globalParameters: {}
