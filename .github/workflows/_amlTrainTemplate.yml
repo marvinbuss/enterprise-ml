@@ -67,11 +67,11 @@ jobs:
             --name $JOB_NAME \
             --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml \
             --stream
-          
+
           echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
         env:
           JOB_NAME: "Job-${{ github.sha }}"
-      
+
       # Teams notification
       - name: Teams notification
         uses: jdcargile/ms-teams-notification@v1.3
@@ -79,7 +79,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URI }}
-          notification-summary: New model has been trained. Please review and approve promotion to production 
+          notification-summary: New model has been trained. Please review and approve promotion to production
           notification-color: 17a2b8
           timezone: UTC
 

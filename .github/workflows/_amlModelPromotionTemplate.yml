@@ -66,7 +66,7 @@ jobs:
             --name ${{ inputs.job_name }} \
             --output-name ${{ inputs.output_name }} \
             --download-path ${{ github.workspace }}/model/
-      
+
       # Create Artifact
       - name: Create Artifact
         id: artifact_create
@@ -112,7 +112,7 @@ jobs:
         with:
           name: model
           path: ${{ github.workspace }}/model/
-    
+
       # Register Model
       - name: Register Model
         id: aml_model_register
