@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://entmldevlake001.dfs.core.windows.net/"
+			"url": "https://entmlprdlake001.dfs.core.windows.net/"
 		}
 	}
 }
