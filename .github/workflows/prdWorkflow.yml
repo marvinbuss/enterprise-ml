@@ -1,4 +1,4 @@
-name: Dev Deployment
+name: Prod Deployment
 on:
   workflow_dispatch:
   release:
@@ -24,7 +24,7 @@ on:
 jobs:
   infra_validation_prd:
     uses: ./.github/workflows/_infraValidationTemplate.yml
-    name: "Validation of IaC templates - Dev"
+    name: "Validation of IaC templates - Prd"
     with:
       environment: "prd"
     secrets:
@@ -33,7 +33,7 @@ jobs:
 
   infra_deployment_prd:
     uses: ./.github/workflows/_infraDeploymentTemplate.yml
-    name: "Deployment of IaC templates - Dev"
+    name: "Deployment of IaC templates - Prd"
     needs: [infra_validation_prd]
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     with:
@@ -44,8 +44,8 @@ jobs:
 
   aml_deploy_prd:
     uses: ./.github/workflows/_amlDeployTemplate.yml
-    name: "Azure ML Deploy - Dev"
-    needs: [aml_training_prd]
+    name: "Azure ML Deploy - Prd"
+    needs: [infra_deployment_prd]
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     with:
       environment: "prd"

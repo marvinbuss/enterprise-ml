@@ -97,6 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     environment: ${{ inputs.environment_destination }}
+    needs: [model_download]
 
     steps:
       # Check Out Repository
