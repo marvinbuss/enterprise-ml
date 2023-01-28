@@ -36,6 +36,7 @@ param searchPartitionCount int = 1
 @maxValue(12)
 param searchReplicaCount int = 1
 param privateDnsZoneIdSearch string = ''
+param userAssignedIdentityId string
 
 // Variables
 var searchPrivateEndpointName = '${search.name}-pe'
@@ -46,7 +47,10 @@ resource search 'Microsoft.Search/searchServices@2021-04-01-preview' = {
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'SystemAssigned, UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   sku: {
     name: searchSkuName
