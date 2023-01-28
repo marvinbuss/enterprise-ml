@@ -24,9 +24,6 @@ jobs:
     name: "Validation of IaC templates - Dev"
     with:
       environment: "dev"
-      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ vars.AZURE_LOCATION }}
     secrets:
       tenant_id: ${{ secrets.TENANT_ID }}
       client_id: ${{ secrets.CLIENT_ID }}
@@ -38,9 +35,6 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'release'
     with:
       environment: "dev"
-      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ vars.AZURE_LOCATION }}
     secrets:
       tenant_id: ${{ secrets.TENANT_ID }}
       client_id: ${{ secrets.CLIENT_ID }}

@@ -8,18 +8,6 @@ on:
         type: string
         default: "dev"
         description: "Specifies the environment of the deployment."
-      azure_subscription_id:
-        required: true
-        type: string
-        description: "Specifies the subscription id of the deployment."
-      azure_resource_group_name:
-        required: true
-        type: string
-        description: "Specifies the name of the resource group for the deployment."
-      azure_location_name:
-        required: true
-        type: string
-        description: "Specifies the location name of the deployment."
     secrets:
       tenant_id:
         required: true
@@ -27,6 +15,10 @@ on:
       client_id:
         required: true
         description: "Specifies the client id."
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   validation:
@@ -57,8 +49,8 @@ jobs:
         with:
           scope: resourcegroup
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ inputs.azure_resource_group_name }}
-          region: ${{ inputs.azure_location_name }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          region: ${{ vars.AZURE_LOCATION }}
           template: ${{ github.workspace }}/infra/main.bicep
           parameters: ${{ github.workspace }}/infra/params.${{ inputs.environment }}.json
           deploymentMode: Validate
@@ -72,8 +64,8 @@ jobs:
         with:
           scope: resourcegroup
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ inputs.azure_resource_group_name }}
-          region: ${{ inputs.azure_location_name }}
+          resourceGroupName: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+          region: ${{ vars.AZURE_LOCATION }}
           template: ${{ github.workspace }}/infra/main.bicep
           parameters: ${{ github.workspace }}/infra/params.${{ inputs.environment }}.json
           deploymentMode: Incremental
