@@ -76,9 +76,6 @@
         "databricksAccessToken": {
             "value": ""
         },
-        "enableRoleAssignments": {
-            "value": true
-        },
         "cognitiveServiceKinds": {
             "value": []
         },
@@ -89,7 +86,7 @@
             "value": true
         },
         "subnetId": {
-            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-vnet/providers/Microsoft.Network/virtualNetworks/ent-ml-prd-vnet/subnets/App002Subnet"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-network/providers/Microsoft.Network/virtualNetworks/ent-ml-prd-vnet/subnets/App002Subnet"
         },
         "privateDnsZoneIdKeyVault": {
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
@@ -122,10 +119,10 @@
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.windows.net"
         },
         "privateDnsZoneIdTable": {
-            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.windows.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.windows.net"
         },
         "privateDnsZoneIdQueue": {
-            "value": "/subscriptions/757c4165-0823-49f7-9678-5a85fe5e17cc/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net"
+            "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net"
         },
         "privateDnsZoneIdMachineLearningApi": {
             "value": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-prd-global-dns/providers/Microsoft.Network/privateDnsZones/privatelink.api.azureml.ms"
