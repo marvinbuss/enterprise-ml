@@ -8,7 +8,6 @@ on:
       - "code/ml/**"
       - "code/synapseParameters/**"
       - "infra/**"
-      - "data-auto-dev-synapse001/**"
 
   pull_request:
     branches:
@@ -25,13 +24,12 @@ jobs:
     name: "Validation of IaC templates - Dev"
     with:
       environment: "dev"
+      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      azure_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+      azure_location_name: ${{ vars.AZURE_LOCATION }}
     secrets:
-      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ secrets.AZURE_LOCATION }}
       tenant_id: ${{ secrets.TENANT_ID }}
       client_id: ${{ secrets.CLIENT_ID }}
-      client_secret: ${{ secrets.CLIENT_SECRET }}
 
   infra_deployment_dev:
     uses: ./.github/workflows/_infraDeploymentTemplate.yml
@@ -40,10 +38,9 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'release'
     with:
       environment: "dev"
+      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      azure_resource_group_name: ${{ vars.AZURE_RESOURCE_GROUP_NAME }}
+      azure_location_name: ${{ vars.AZURE_LOCATION }}
     secrets:
-      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ secrets.AZURE_LOCATION }}
       tenant_id: ${{ secrets.TENANT_ID }}
       client_id: ${{ secrets.CLIENT_ID }}
-      client_secret: ${{ secrets.CLIENT_SECRET }}
