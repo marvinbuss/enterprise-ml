@@ -5,7 +5,11 @@
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://ent-ml-dev-vault001.vault.azure.net/"
+			"baseUrl": "https://ent-ml-dev-vault001.vault.azure.net/",
+			"credential": {
+				"referenceName": "WorkspaceUserAssignedIdentity",
+				"type": "CredentialReference"
+			}
 		}
 	}
 }
