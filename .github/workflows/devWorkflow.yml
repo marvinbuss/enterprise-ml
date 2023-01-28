@@ -70,7 +70,7 @@ jobs:
     with:
       environment_source: "dev"
       environment_destination: "prd"
-      job_name: ${{ needs.train.outputs.job_name }}
+      job_name: ${{ needs.aml_training_dev.outputs.job_name }}
       output_name: best_model
     secrets:
       TENANT_ID: ${{ secrets.TENANT_ID }}
