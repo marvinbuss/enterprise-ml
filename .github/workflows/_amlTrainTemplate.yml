@@ -57,7 +57,7 @@ jobs:
       - name: Create Dataset
         id: aml_dataset
         run: |
-          az ml data update \
+          az ml data create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml
@@ -66,15 +66,17 @@ jobs:
       - name: Create Job
         id: aml_job
         run: |
-          JOB_NAME
           az ml job create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --name $JOB_NAME \
-            --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml \
+            --file ${{ github.workspace }}/code/ml/pipeline-train.yml \
             --stream
 
+          STUDIO_URL=$(az ml job show --name "train001" --workspace-name "ent-ml-dev-machinelearning001" --resource-group "ent-ml-dev-app001" --query services.Studio.endpoint)
+
           echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
+          echo "studio_url=$STUDIO_URL" >> $GITHUB_OUTPUT
         env:
           JOB_NAME: "Job-${{ github.sha }}"
 
@@ -85,7 +87,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URI }}
-          notification-summary: New model has been trained. Please review and approve promotion to production
+          notification-summary: New model has been trained. Promotion approval required. Please review here ${{ steps.aml_job.outputs.studio_url }}
           notification-color: 17a2b8
           timezone: UTC
 
