@@ -1,4 +1,4 @@
-name: Dev Deployment
+name: Prod Deployment
 on:
   workflow_dispatch:
   release:
@@ -45,7 +45,7 @@ jobs:
   aml_deploy_prd:
     uses: ./.github/workflows/_amlDeployTemplate.yml
     name: "Azure ML Deploy - Dev"
-    needs: [aml_training_prd]
+    needs: [infra_deployment_prd]
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     with:
       environment: "prd"
