@@ -100,7 +100,11 @@ resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' = {
     networkAcls: {
       bypass: 'Metrics, AzureServices'
       defaultAction: 'Deny'
-      ipRules: []
+      ipRules: [
+        {
+          value: '0.0.0.0/0'
+        }
+      ]
       virtualNetworkRules: []
     }
     publicNetworkAccess: 'Enabled'
