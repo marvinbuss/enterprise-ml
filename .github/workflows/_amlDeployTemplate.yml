@@ -64,7 +64,6 @@ jobs:
           az ml online-deployment update \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
-            --name "Job-${{ github.sha }}" \
             --file ${{ github.workspace }}/code/ml/score-online/deployment.yml
 
       # Invoke Online Deployment
