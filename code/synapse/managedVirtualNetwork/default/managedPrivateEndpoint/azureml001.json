@@ -2,6 +2,10 @@
 	"name": "azureml001",
 	"properties": {
 		"privateLinkResourceId": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-dev-app001/providers/Microsoft.MachineLearningServices/workspaces/ent-ml-dev-machinelearning001",
-		"groupId": "amlworkspace"
+		"groupId": "amlworkspace",
+		"fqdns": [
+			"3bc3e65b-4217-4896-b57e-114e442885bb.workspace.northeurope.api.azureml.ms",
+			"3bc3e65b-4217-4896-b57e-114e442885bb.workspace.northeurope.cert.api.azureml.ms"
+		]
 	}
 }
