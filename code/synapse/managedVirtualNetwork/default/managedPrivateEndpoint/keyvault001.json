@@ -1,0 +1,7 @@
+{
+	"name": "keyvault001",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/dfbd9ec6-9c65-43d6-bb61-bf7c4e221d9d/resourceGroups/ent-ml-dev-app001/providers/Microsoft.KeyVault/vaults/ent-ml-dev-vault001",
+		"groupId": "vault"
+	}
+}
