@@ -57,7 +57,7 @@ jobs:
       - name: Create Dataset
         id: aml_dataset
         run: |
-          az ml data update \
+          az ml data create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml
@@ -66,12 +66,11 @@ jobs:
       - name: Create Job
         id: aml_job
         run: |
-          JOB_NAME
           az ml job create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --name $JOB_NAME \
-            --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml \
+            --file ${{ github.workspace }}/code/ml/pipeline-train.yml \
             --stream
 
           echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
