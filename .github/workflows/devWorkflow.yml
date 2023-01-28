@@ -21,7 +21,7 @@ on:
 
 jobs:
   infra_validation_dev:
-    uses: ./.github/workflows/infraValidationTemplate.yml
+    uses: ./.github/workflows/_infraValidationTemplate.yml
     name: "Validation of IaC templates - Dev"
     with:
       environment: "dev"
@@ -34,7 +34,7 @@ jobs:
       client_secret: ${{ secrets.CLIENT_SECRET }}
 
   infra_deployment_dev:
-    uses: ./.github/workflows/infraDeploymentTemplate.yml
+    uses: ./.github/workflows/_infraDeploymentTemplate.yml
     name: "Deployment of IaC templates - Dev"
     needs: [infra_validation_dev]
     if: github.event_name == 'push' || github.event_name == 'release'
