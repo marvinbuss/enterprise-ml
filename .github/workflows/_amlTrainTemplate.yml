@@ -91,7 +91,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URI }}
-          notification-summary: New model has been trained. Promotion approval required. Please review [here](${{ steps.aml_job.outputs.studio_url }}).
+          notification-summary: Training completed. Please review.  # ${{ steps.aml_job.outputs.studio_url }}.
           notification-color: 17a2b8
           timezone: UTC
 
