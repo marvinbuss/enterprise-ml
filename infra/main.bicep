@@ -43,6 +43,8 @@ param machineLearningComputeInstance002AdministratorObjectId string = ''
 @secure()
 @description('Specifies the public ssh key for compute instance 002 in the Machine Learning Workspace. This parameter is optional and allows the user to connect via Visual Studio Code to the Compute Instance.')
 param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
+@description('Specifies whether endpoints should be deployed in the Machine Learning Workspace. This parameter is optional and allows disabling the online endpoint deployment as it overwrites the traffic settings.')
+param deployMachineLearningEndpoint bool = false
 @secure()
 @description('Specifies the administrator object ID of the Synapse Workspace. If you selected dataFactory as processingService, leave this value empty as is.')
 param administratorObjectId string = ''
@@ -344,6 +346,7 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
     privateDnsZoneIdMachineLearningApi: privateDnsZoneIdMachineLearningApi
     privateDnsZoneIdMachineLearningNotebooks: privateDnsZoneIdMachineLearningNotebooks
     userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    deployMachineLearningEndpoint: deployMachineLearningEndpoint
   }
 }
 

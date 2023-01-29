@@ -31,6 +31,7 @@ param machineLearningComputeInstance002AdministratorPublicSshKey string = ''
 param privateDnsZoneIdMachineLearningApi string = ''
 param privateDnsZoneIdMachineLearningNotebooks string = ''
 param userAssignedIdentityId string
+param deployMachineLearningEndpoint bool
 
 // Variables
 var machineLearningPrivateEndpointName = '${machineLearning.name}-pe'
@@ -401,7 +402,7 @@ resource machineLearningDatalakes 'Microsoft.MachineLearningServices/workspaces/
   }
 }]
 
-resource machineLearningOnlineEndpoint 'Microsoft.MachineLearningServices/workspaces/onlineEndpoints@2022-10-01' = {
+resource machineLearningOnlineEndpoint 'Microsoft.MachineLearningServices/workspaces/onlineEndpoints@2022-10-01' = if (deployMachineLearningEndpoint) {
   parent: machineLearning
   name: 'online-endpoint-diabetes-${environmentName}'
   location: location
@@ -418,6 +419,7 @@ resource machineLearningOnlineEndpoint 'Microsoft.MachineLearningServices/worksp
     authMode: 'AMLToken'  // 'AADToken'
     description: 'An online endpoint for scoring diabetes data.'
     publicNetworkAccess: 'Enabled'
+    traffic: {}
   }
 }
 
