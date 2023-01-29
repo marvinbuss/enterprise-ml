@@ -473,3 +473,5 @@ module synapse001RoleAssignmentmachineLearning 'modules/auxiliary/synapseRoleAss
 }
 
 // Outputs
+output machineLearningName string = machineLearning001.outputs.machineLearningName
+output machineLearningOnlineEndpointName string = machineLearning001.outputs.machineLearningOnlineEndpointName
