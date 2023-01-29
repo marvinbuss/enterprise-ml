@@ -68,7 +68,7 @@ jobs:
         run: |
           mkdir "${{ github.workspace }}/download/" -p
           mkdir "${{ github.workspace }}/model/" -p
-          
+
           az ml job download \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \

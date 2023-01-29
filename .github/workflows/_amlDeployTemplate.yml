@@ -67,7 +67,7 @@ jobs:
       - name: Create Online Deployment
         id: aml_online_deployment
         run: |
-          DEPLOYMENT_NAME=${BASE_NAME:0:31}
+          DEPLOYMENT_NAME=dep-${BASE_NAME:0:28}
           az ml online-deployment create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
