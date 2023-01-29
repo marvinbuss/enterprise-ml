@@ -15,6 +15,13 @@ on:
       CLIENT_ID:
         required: true
         description: "Specifies the client id."
+    outputs:
+      machine_learning_name:
+        description: "The name of the machine learning workspace."
+        value: ${{ jobs.deployment.outputs.machine_learning_name }}
+      machine_learning_online_endpoint_name:
+        description: "The name of the machine learning workspace online endpoints."
+        value: ${{ jobs.deployment.outputs.machine_learning_online_endpoint_name }}
 
 permissions:
   id-token: write
@@ -27,6 +34,9 @@ jobs:
     continue-on-error: false
     if: github.event_name == 'push' || github.event_name == 'release'
     environment: ${{ inputs.environment }}
+    outputs:
+      machine_learning_name: ${{ steps.deployment_run.outputs.machineLearningName }}
+      machine_learning_online_endpoint_name: ${{ steps.deployment_run.outputs.machineLearningOnlineEndpointName }}
 
     steps:
       # Check Out Repository
