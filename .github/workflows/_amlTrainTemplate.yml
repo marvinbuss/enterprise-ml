@@ -20,7 +20,7 @@ on:
         description: "Teams webhook URL for notification."
     outputs:
       job_name:
-        description: "The name of the job."
+        description: "The name of the machine learning job."
         value: ${{ jobs.train.outputs.job_name }}
 
 permissions:
