@@ -71,16 +71,18 @@ jobs:
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --endpoint-name ${{ inputs.machine_learning_online_endpoint_name }} \
-            --file ${{ github.workspace }}/code/ml/score-online/deployment.yml
+            --name "${{ inputs.environment }}-${{ github.sha }}" \
+            --file ${{ github.workspace }}/code/ml/score-online/deployment.yml \
+            --all-traffic
 
       # Invoke Online Deployment
       - name: Invoke Online Deployment
-        id: aml_online_deployment_invoke
+        id: aml_online_endpoint_invoke
         run: |
-          az ml online-deployment invoke \
+          az ml online-endpoint invoke \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
-            --name "online-endpoint-diabetes" \
+            --name ${{ inputs.machine_learning_online_endpoint_name }} \
             --request-file ${{ github.workspace }}/code/ml/score-online/sample-request.json
 
       # Log out from Azure
