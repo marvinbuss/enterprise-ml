@@ -67,13 +67,16 @@ jobs:
       - name: Create Online Deployment
         id: aml_online_deployment
         run: |
+          DEPLOYMENT_NAME=${BASE_NAME:0:31}
           az ml online-deployment create \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
             --endpoint-name ${{ inputs.machine_learning_online_endpoint_name }} \
-            --name "${{ inputs.environment }}-${{ github.sha }}" \
+            --name $DEPLOYMENT_NAME \
             --file ${{ github.workspace }}/code/ml/score-online/deployment.yml \
             --all-traffic
+        env:
+          BASE_NAME: "${{ github.run_attempt }}-${{ github.sha }}"
 
       # Invoke Online Deployment
       - name: Invoke Online Deployment
