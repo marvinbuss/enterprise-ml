@@ -322,6 +322,7 @@ module machineLearning001 'modules/services/machinelearning.bicep' = {
   ]
   params: {
     location: location
+    environmentName: environment
     tags: tagsJoined
     subnetId: subnetId
     machineLearningName: machineLearning001Name

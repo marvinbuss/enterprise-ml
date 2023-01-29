@@ -23,6 +23,9 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  JOB_NAME: "Job-${{ github.sha }}"
+
 jobs:
   train:
     name: Validation of ${{ inputs.environment }}
@@ -30,7 +33,7 @@ jobs:
     continue-on-error: false
     environment: ${{ inputs.environment }}
     outputs:
-      job_name: ${{ steps.aml_job.outputs.job_name }}
+      job_name: ${{ env.JOB_NAME }}
 
     steps:
       # Check Out Repository
@@ -74,11 +77,7 @@ jobs:
             --stream
 
           STUDIO_URL=$(az ml job show --name "train001" --workspace-name "ent-ml-dev-machinelearning001" --resource-group "ent-ml-dev-app001" --query services.Studio.endpoint)
-
-          echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
           echo "studio_url=$STUDIO_URL" >> $GITHUB_OUTPUT
-        env:
-          JOB_NAME: "Job-${{ github.sha }}"
 
       # Teams notification
       - name: Teams notification

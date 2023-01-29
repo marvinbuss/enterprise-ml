@@ -6,6 +6,7 @@ targetScope = 'resourceGroup'
 
 // Parameters
 param location string
+param environmentName string
 param tags object
 param subnetId string
 param machineLearningName string
@@ -399,6 +400,26 @@ resource machineLearningDatalakes 'Microsoft.MachineLearningServices/workspaces/
     }
   }
 }]
+
+resource machineLearningOnlineEndpoint 'Microsoft.MachineLearningServices/workspaces/onlineEndpoints@2022-10-01' = {
+  parent: machineLearning
+  name: 'online-endpoint-diabetes-${environmentName}'
+  location: location
+  tags: {
+    AllowlistedObjectIds: machineLearningComputeInstance001AdministratorObjectId
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
+  }
+  properties: {
+    authMode: 'AMLToken'  // 'AADToken'
+    description: 'An online endpoint for scoring diabetes data.'
+    publicNetworkAccess: 'Enabled'
+  }
+}
 
 resource machineLearningPrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-07-01' = {
   name: machineLearningPrivateEndpointName
