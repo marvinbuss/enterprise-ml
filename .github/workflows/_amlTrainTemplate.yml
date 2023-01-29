@@ -75,8 +75,8 @@ jobs:
 
           STUDIO_URL=$(az ml job show --name "train001" --workspace-name "ent-ml-dev-machinelearning001" --resource-group "ent-ml-dev-app001" --query services.Studio.endpoint)
 
-          echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
           echo "studio_url=$STUDIO_URL" >> $GITHUB_OUTPUT
+          echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
         env:
           JOB_NAME: "Job-${{ github.sha }}"
 
