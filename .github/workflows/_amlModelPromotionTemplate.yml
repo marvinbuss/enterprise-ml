@@ -66,6 +66,8 @@ jobs:
       - name: Download Model
         id: aml_model_download
         run: |
+          mkdir ${{ github.workspace }}/download/ -p
+
           az ml job download \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \

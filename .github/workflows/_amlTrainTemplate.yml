@@ -29,7 +29,7 @@ permissions:
 
 jobs:
   train:
-    name: Validation of ${{ inputs.environment }}
+    name: Train model in ${{ inputs.environment }}
     runs-on: ubuntu-latest
     continue-on-error: false
     environment: ${{ inputs.environment }}
