@@ -35,8 +35,8 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'release'
     environment: ${{ inputs.environment }}
     outputs:
-      machine_learning_name: ${{ steps.deployment_run.outputs.machineLearningName }}
-      machine_learning_online_endpoint_name: ${{ steps.deployment_run.outputs.machineLearningOnlineEndpointName }}
+      machine_learning_name: ${{ steps.create_outputs.outputs.machine_learning_name }}
+      machine_learning_online_endpoint_name: ${{ steps.create_outputs.outputs.machine_learning_online_endpoint_name }}
 
     steps:
       # Check Out Repository
@@ -67,6 +67,13 @@ jobs:
           deploymentMode: Incremental
           deploymentName: "${{ inputs.environment }}-${{ github.sha }}"
           failOnStdErr: false
+
+      # Create Outputs
+      - name: Create Outputs
+        id: create_outputs
+        run: |
+          echo "machine_learning_name=${{ steps.deployment_run.outputs.machineLearningName }}" >> $GITHUB_OUTPUT
+          echo "machine_learning_online_endpoint_name=${{ steps.deployment_run.outputs.machineLearningOnlineEndpointName }}" >> $GITHUB_OUTPUT
 
       # Log out from Azure
       - name: Log out from Azure
