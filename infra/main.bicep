@@ -452,6 +452,16 @@ module userAssignedIdentity001RoleAssignmentApplicationInsights 'modules/auxilia
   }
 }
 
+module userAssignedIdentity001RoleAssignmentMachineLearning 'modules/auxiliary/uaiRoleAssignmentMachineLearning.bicep' = {
+  name: 'userAssignedIdentity001RoleAssignmentMachineLearning'
+  scope: resourceGroup()
+  params: {
+    machineLearningId: machineLearning001.outputs.machineLearningId
+    userAssignedIdentityId: userAssignedIdentity001.outputs.userAssignedIdentityId
+    role: 'Contributor'
+  }
+}
+
 module synapse001RoleAssignmentStorage 'modules/auxiliary/synapseRoleAssignmentStorage.bicep' = if (processingService == 'synapse') {
   name: 'synapse001RoleAssignmentStorage'
   scope: resourceGroup(synapseDefaultStorageAccountSubscriptionId, synapseDefaultStorageAccountResourceGroupName)
