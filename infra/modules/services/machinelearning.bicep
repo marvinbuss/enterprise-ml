@@ -471,3 +471,5 @@ resource machineLearningPrivateEndpointARecord 'Microsoft.Network/privateEndpoin
 
 // Outputs
 output machineLearningId string = machineLearning.id
+output machineLearningName string = machineLearning.name
+output machineLearningOnlineEndpointName string = machineLearningOnlineEndpoint.name
