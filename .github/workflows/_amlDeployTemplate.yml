@@ -1,4 +1,4 @@
-name: Infra Validation Template
+name: Azure ML Deployment Template
 
 on:
   workflow_call:
@@ -8,11 +8,11 @@ on:
         type: string
         default: "dev"
         description: "Specifies the environment of the deployment."
-      # endpoint_name:
-      #   required: true
-      #   type: string
-      #   default: "online-endpoint-diabetes"
-      #   description: "Specifies the name of the endpoint."
+      machine_learning_online_endpoint_name:
+        required: true
+        type: string
+        default: "online-endpoint-diabetes"
+        description: "Specifies the name of the endpoint."
     secrets:
       TENANT_ID:
         required: true
@@ -70,6 +70,7 @@ jobs:
           az ml online-deployment update \
             --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
             --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --endpoint-name ${{ inputs.machine_learning_online_endpoint_name }} \
             --file ${{ github.workspace }}/code/ml/score-online/deployment.yml
 
       # Invoke Online Deployment
