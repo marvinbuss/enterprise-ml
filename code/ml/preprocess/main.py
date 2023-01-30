@@ -10,7 +10,7 @@ RANDOM_STATE = 0
 
 
 def create_mltable(path: str, file_name: str) -> None:
-    """Creates an MLTable definition at the provided path.
+    """Creates an MLTable definition at the provided file path.
 
     path (str): The path where the MLTable file will be created.
     file_name (str): The file name referenced in the MLTable file.
