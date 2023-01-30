@@ -20,6 +20,7 @@ param privateDnsZoneIdSynapseSql string = ''
 param privateDnsZoneIdSynapseDev string = ''
 param purviewId string = ''
 param enableSqlPool bool = false
+param userAssignedIdentityId string
 
 // Variables
 var synapseDefaultStorageAccountFileSystemName = length(split(synapseDefaultStorageAccountFileSystemId, '/')) == 13 ? last(split(synapseDefaultStorageAccountFileSystemId, '/')) : 'incorrectSegmentLength'
@@ -34,7 +35,10 @@ resource synapse 'Microsoft.Synapse/workspaces@2021-06-01' = {
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'SystemAssigned,UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentityId}': {}
+    }
   }
   properties: {
     azureADOnlyAuthentication: true

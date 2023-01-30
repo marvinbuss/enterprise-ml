@@ -23,7 +23,11 @@ param tags object = {}
 @description('Specifies the address space of the vnet.')
 param vnetAddressPrefix string = '10.0.0.0/24'
 @description('Specifies the address space of the subnet that is used for the services.')
-param servicesSubnetAddressPrefix string = '10.0.0.0/27'
+param servicesSubnetAddressPrefix string = '10.0.0.0/26'
+@description('Specifies the address space of the subnet that is used for the app 001.')
+param appSubnet001AddressPrefix string = '10.0.0.64/26'
+@description('Specifies the address space of the subnet that is used for the app 002.')
+param appSubnet002AddressPrefix string = '10.0.0.128/26'
 
 // Variables
 var name = toLower('${prefix}-${environment}')
@@ -53,6 +57,8 @@ module networkServices 'modules/network.bicep' = {
     tags: tagsJoined
     vnetAddressPrefix: vnetAddressPrefix
     servicesSubnetAddressPrefix: servicesSubnetAddressPrefix
+    appSubnet001AddressPrefix: appSubnet001AddressPrefix
+    appSubnet002AddressPrefix: appSubnet002AddressPrefix
   }
 }
 
@@ -117,6 +123,14 @@ module storageResources 'modules/storage.bicep' = {
     privateDnsZoneIdBlob: globalDnsZones.outputs.privateDnsZoneIdBlob
     privateDnsZoneIdDfs: globalDnsZones.outputs.privateDnsZoneIdDfs
   }
+}
+
+// Project resources
+resource projectResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: '${name}-app001'
+  location: location
+  tags: tagsJoined
+  properties: {}
 }
 
 // Outputs

@@ -1,0 +1,88 @@
+name: Azure ML Deployment Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+      machine_learning_online_endpoint_name:
+        required: true
+        type: string
+        default: "online-endpoint-diabetes"
+        description: "Specifies the name of the endpoint."
+    secrets:
+      TENANT_ID:
+        required: true
+        description: "Specifies the tenant id of the deployment."
+      CLIENT_ID:
+        required: true
+        description: "Specifies the client id."
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy Model in ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v3
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Install ML extension
+      - name: Install ML Extension
+        id: aml_install
+        run: |
+          az extension add -n ml
+
+      # Create Online Deployment
+      - name: Create Online Deployment
+        id: aml_online_deployment
+        run: |
+          DEPLOYMENT_NAME=dep-${BASE_NAME:0:28}
+          az ml online-deployment create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --endpoint-name ${{ inputs.machine_learning_online_endpoint_name }} \
+            --name $DEPLOYMENT_NAME \
+            --file ${{ github.workspace }}/code/ml/score-online/deployment.yml \
+            --all-traffic
+        env:
+          BASE_NAME: "${{ github.run_attempt }}-${{ github.sha }}"
+
+      # Invoke Online Deployment
+      - name: Invoke Online Deployment
+        id: aml_online_endpoint_invoke
+        run: |
+          az ml online-endpoint invoke \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name ${{ inputs.machine_learning_online_endpoint_name }} \
+            --request-file ${{ github.workspace }}/code/ml/score-online/sample-request.json
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout

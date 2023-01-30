@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/latest/model.schema.json
+name: supportvectorclassifier
+path: ../../../model
+type: mlflow_model
+description: Model trained in dev workspace.

@@ -1,0 +1,105 @@
+name: Azure ML Training Template
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        default: "dev"
+        description: "Specifies the environment of the deployment."
+    secrets:
+      TENANT_ID:
+        required: true
+        description: "Specifies the tenant id of the deployment."
+      CLIENT_ID:
+        required: true
+        description: "Specifies the client id."
+      TEAMS_WEBHOOK_URI:
+        required: true
+        description: "Teams webhook URL for notification."
+    outputs:
+      job_name:
+        description: "The name of the machine learning job."
+        value: ${{ jobs.train.outputs.job_name }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  train:
+    name: Train model in ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    environment: ${{ inputs.environment }}
+    outputs:
+      job_name: ${{ steps.aml_job.outputs.job_name }}
+
+    steps:
+      # Check Out Repository
+      - name: Check Out Repository
+        id: checkout_repository
+        uses: actions/checkout@v3
+
+      # Login to Azure
+      - name: Azure Login
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Install ML extension
+      - name: Install ML Extension
+        id: aml_install
+        run: |
+          az extension add -n ml
+
+      # Create Dataset
+      - name: Create Dataset
+        id: aml_dataset
+        run: |
+          az ml data create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --file ${{ github.workspace }}/code/ml/data/diabetes_mltable.yml
+
+      # Create Job
+      - name: Create Job
+        id: aml_job
+        run: |
+          az ml job create \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP_NAME }} \
+            --workspace-name ${{ vars.AZURE_ML_WORKSPACE_NAME }} \
+            --name $JOB_NAME \
+            --file ${{ github.workspace }}/code/ml/pipeline-train.yml \
+            --stream
+
+          STUDIO_URL=$(az ml job show --name "train001" --workspace-name "ent-ml-dev-machinelearning001" --resource-group "ent-ml-dev-app001" --query services.Studio.endpoint | jq -r)
+
+          echo "studio_url=$STUDIO_URL" >> $GITHUB_OUTPUT
+          echo "job_name=$JOB_NAME" >> $GITHUB_OUTPUT
+        env:
+          JOB_NAME: "Job-${{ github.sha }}"
+
+      # Teams notification
+      - name: Teams notification
+        uses: jdcargile/ms-teams-notification@v1.3
+        id: teams_notification
+        with:
+          github-token: ${{ github.token }}
+          ms-teams-webhook-uri: ${{ secrets.TEAMS_WEBHOOK_URI }}
+          notification-summary: Training completed. Please review.  # ${{ steps.aml_job.outputs.studio_url }}.
+          notification-color: 17a2b8
+          timezone: UTC
+
+      # Log out from Azure
+      - name: Log out from Azure
+        id: azure_logout
+        uses: azure/cli@v1
+        with:
+          azcliversion: "agentazcliversion"
+          inlineScript: |
+            az logout

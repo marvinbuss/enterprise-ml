@@ -5,49 +5,74 @@ on:
       - main
     paths:
       - ".github/workflows/**"
-      - "code/MyDotNetCoreSqlProject/**"
-      - "code/MyDotNetSqlProject/**"
-      - "code/Scripts/**"
+      - "code/ml/**"
       - "code/synapseParameters/**"
       - "infra/**"
-      - "data-auto-dev-synapse001/**"
 
   pull_request:
     branches:
       - main
     paths:
       - ".github/workflows/**"
-      - "code/MyDotNetCoreSqlProject/**"
-      - "code/MyDotNetSqlProject/**"
-      - "code/Scripts/**"
+      - "code/ml/**"
       - "code/synapseParameters/**"
       - "infra/**"
 
 jobs:
   infra_validation_dev:
-    uses: ./.github/workflows/infraValidationTemplate.yml
+    uses: ./.github/workflows/_infraValidationTemplate.yml
     name: "Validation of IaC templates - Dev"
     with:
       environment: "dev"
     secrets:
-      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ secrets.AZURE_LOCATION }}
-      tenant_id: ${{ secrets.TENANT_ID }}
-      client_id: ${{ secrets.CLIENT_ID }}
-      client_secret: ${{ secrets.CLIENT_SECRET }}
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
 
   infra_deployment_dev:
-    uses: ./.github/workflows/infraDeploymentTemplate.yml
+    uses: ./.github/workflows/_infraDeploymentTemplate.yml
     name: "Deployment of IaC templates - Dev"
     needs: [infra_validation_dev]
     if: github.event_name == 'push' || github.event_name == 'release'
     with:
       environment: "dev"
     secrets:
-      azure_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      azure_resource_group_name: ${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-      azure_location_name: ${{ secrets.AZURE_LOCATION }}
-      tenant_id: ${{ secrets.TENANT_ID }}
-      client_id: ${{ secrets.CLIENT_ID }}
-      client_secret: ${{ secrets.CLIENT_SECRET }}
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+
+  aml_training_dev:
+    uses: ./.github/workflows/_amlTrainTemplate.yml
+    name: "Azure ML Training - Dev"
+    needs: [infra_deployment_dev]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    with:
+      environment: "dev"
+    secrets:
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      TEAMS_WEBHOOK_URI: ${{ secrets.TEAMS_WEBHOOK_URI }}
+
+  aml_deploy_dev:
+    uses: ./.github/workflows/_amlDeployTemplate.yml
+    name: "Azure ML Deploy - Dev"
+    needs: [infra_deployment_dev,aml_training_dev]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    with:
+      environment: "dev"
+      machine_learning_online_endpoint_name: ${{ needs.infra_deployment_dev.outputs.machine_learning_online_endpoint_name }}
+    secrets:
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+
+  aml_model_promotion_dev_to_prd:
+    uses: ./.github/workflows/_amlModelPromotionTemplate.yml
+    name: "Azure ML Model Promotion - Dev to Prod"
+    needs: [aml_training_dev]
+    if: github.event_name == 'push' || github.event_name == 'release'
+    with:
+      environment_source: "dev"
+      environment_destination: "prd"
+      job_name: ${{ needs.aml_training_dev.outputs.job_name }}
+      output_name: best_model
+    secrets:
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}

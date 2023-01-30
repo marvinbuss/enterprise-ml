@@ -6,8 +6,9 @@ targetScope = 'resourceGroup'
 
 // Parameters
 param storageAccountFileSystemId string
-param machineLearningId string
+param userAssignedIdentityId string
 @allowed([
+  'Contributor'
   'StorageBlobDataReader'
   'StorageBlobDataContributor'
   'StorageBlobDataOwner'
@@ -17,10 +18,11 @@ param role string
 // Variables
 var storageAccountFileSystemName = length(split(storageAccountFileSystemId, '/')) == 13 ? last(split(storageAccountFileSystemId, '/')) : 'incorrectSegmentLength'
 var storageAccountName = length(split(storageAccountFileSystemId, '/')) == 13 ? split(storageAccountFileSystemId, '/')[8] : 'incorrectSegmentLength'
-var machineLearningSubscriptionId = length(split(machineLearningId, '/')) == 9 ? split(machineLearningId, '/')[2] : subscription().subscriptionId
-var machineLearningResourceGroupName = length(split(machineLearningId, '/')) == 9 ? split(machineLearningId, '/')[4] : resourceGroup().name
-var machineLearningName = length(split(machineLearningId, '/')) == 9 ? last(split(machineLearningId, '/')) : 'incorrectSegmentLength'
+var userAssignedIdentitySubscriptionId = length(split(userAssignedIdentityId, '/')) == 9 ? split(userAssignedIdentityId, '/')[2] : subscription().subscriptionId
+var userAssignedIdentityResourceGroupName = length(split(userAssignedIdentityId, '/')) == 9 ? split(userAssignedIdentityId, '/')[4] : resourceGroup().name
+var userAssignedIdentityName = length(split(userAssignedIdentityId, '/')) == 9 ? last(split(userAssignedIdentityId, '/')) : 'incorrectSegmentLength'
 var roles = {
+  Contributor: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
   StorageBlobDataReader: '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1'
   StorageBlobDataContributor: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
   StorageBlobDataOwner: 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b'
@@ -31,17 +33,17 @@ resource storageAccountFileSystem 'Microsoft.Storage/storageAccounts/blobService
   name: '${storageAccountName}/default/${storageAccountFileSystemName}'
 }
 
-resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-01' existing = {
-  name: machineLearningName
-  scope: resourceGroup(machineLearningSubscriptionId, machineLearningResourceGroupName)
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: userAssignedIdentityName
+  scope: resourceGroup(userAssignedIdentitySubscriptionId, userAssignedIdentityResourceGroupName)
 }
 
 resource synapseRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(uniqueString(storageAccountFileSystem.id, machineLearning.id, roles[role]))
+  name: guid(uniqueString(storageAccountFileSystem.id, userAssignedIdentity.id, roles[role]))
   scope: storageAccountFileSystem
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', roles[role])
-    principalId: machineLearning.identity.principalId
+    principalId: userAssignedIdentity.properties.principalId
   }
 }
 

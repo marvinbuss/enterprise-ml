@@ -5,8 +5,11 @@
         "location": {
             "value": "northeurope"
         },
+        "environment": {
+            "value": "prd"
+        },
         "prefix": {
-            "value": "entml-dev"
+            "value": "ent-ml"
         },
         "tags": {
             "value": {}
@@ -15,7 +18,13 @@
             "value": "10.254.0.0/24"
         },
         "servicesSubnetAddressPrefix": {
-            "value": "10.254.0.0/27"
+            "value": "10.254.0.0/26"
+        },
+        "appSubnet001AddressPrefix": {
+            "value": "10.254.0.64/26"
+        },
+        "appSubnet002AddressPrefix": {
+            "value": "10.254.0.128/26"
         }
     }
 }
