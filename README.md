@@ -5,7 +5,7 @@ This repository showcases how to do MLOps with Azure Machine Learning and the la
 1. Data Discovery,
 2. Experimentation,
 3. Training,
-4. Deployment and 
+4. Deployment and
 5. Monitoring.
 
 ## Architecture
