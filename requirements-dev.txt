@@ -1,4 +1,4 @@
-pre-commit~=3.3.1
+pre-commit~=3.3.2
 pytest~=7.3.1
 yappi~=1.4.0
 line_profiler~=4.0.3
