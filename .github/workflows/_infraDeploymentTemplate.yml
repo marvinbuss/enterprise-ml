@@ -42,7 +42,7 @@ jobs:
       # Check Out Repository
       - name: Check Out Repository
         id: checkout_repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Login to Azure
       - name: Azure Login
