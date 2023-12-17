@@ -81,7 +81,7 @@ jobs:
       # Create Artifact
       - name: Create Artifact
         id: artifact_create
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: model
           path: ${{ github.workspace }}/model/
