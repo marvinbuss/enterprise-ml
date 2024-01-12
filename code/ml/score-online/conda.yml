@@ -5,13 +5,14 @@ dependencies:
   - python=3.9
   - pip
   - pip:
-    - mlflow~=2.1.1
-    - azureml-mlflow~=1.48.0
-    - azureml-dataprep[pandas]~=4.8.3
-    - numpy~=1.24.1
-    - azureml-core~=1.48.0
-    - azureml-dataset-runtime[fuse]~=1.48.0
-    - opencensus~=0.11.0
+    - mlflow~=2.9.2
+    - azureml-mlflow~=1.54.0
+    - azureml-dataprep[pandas]~=4.12.9
+    - numpy~=1.23.5
+    - azureml-core~=1.54.0
+    - azureml-dataset-runtime[fuse]~=1.54.0
+    - opencensus~=0.11.4
     - opencensus-ext-logging~=0.1.1
-    - opencensus-ext-azure~=1.1.7
-    - inference-schema~=1.4
+    - opencensus-ext-azure~=1.1.13
+    - inference-schema~=1.7.1
+    - azureml-inference-server-http~=1.0.0
