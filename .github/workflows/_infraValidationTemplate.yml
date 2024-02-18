@@ -45,7 +45,7 @@ jobs:
       # Deploy Template - validation
       - name: Deploy Template - validation
         id: deployment_validation
-        uses: azure/arm-deploy@v1
+        uses: azure/arm-deploy@v2
         with:
           scope: resourcegroup
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -60,7 +60,7 @@ jobs:
       # Deploy Template - what-if
       - name: Deploy Template - what-if
         id: deployment_whatif
-        uses: azure/arm-deploy@v1
+        uses: azure/arm-deploy@v2
         with:
           scope: resourcegroup
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}

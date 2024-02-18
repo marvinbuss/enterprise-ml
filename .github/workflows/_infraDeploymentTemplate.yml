@@ -56,7 +56,7 @@ jobs:
       # Deploy Template
       - name: Deploy Template
         id: deployment_run
-        uses: azure/arm-deploy@v1
+        uses: azure/arm-deploy@v2
         with:
           scope: resourcegroup
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
